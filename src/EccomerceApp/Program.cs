@@ -1,5 +1,7 @@
 
 
+using Application.Interfaces;
+using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +28,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-#endregion REPOSITORIOS
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+#endregion 
 
-#region 
+#region REPOSITORIOS
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+#endregion
+
+#region SERVICIOS
+builder.Services.AddScoped<IUserService, UserService>();
 #endregion
 
 var app = builder.Build();

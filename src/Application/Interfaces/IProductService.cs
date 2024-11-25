@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    public class IProductService
+    public interface IProductService
     {
-        public Task CreateUser(CreateUserRequest userRequest);
 
     }
 }

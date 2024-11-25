@@ -19,10 +19,6 @@ namespace Application.Services
         {
             _repository = repository;
         }
-        public async Task CreateUser(CreateProductRequest productRequest)
-        {
-
-          /////
-        }
+       
     }
 }

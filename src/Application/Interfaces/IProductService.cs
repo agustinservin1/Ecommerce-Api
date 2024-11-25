@@ -15,7 +15,7 @@ namespace Application.Interfaces
         Task<ProductDto> GetProductById(int id);
         Task<IEnumerable<ProductDto>> GetAllProducts();
         Task UpdateProduct(int id, UpdateProductRequest updateRequest);
-        Task DeleteCategory(int id);
+        Task DeleteProduct(int id);
 
 
 

@@ -74,7 +74,7 @@ namespace Application.Services
             UpdateProductRequest.UpdateEntity(product, updateRequest, category);
             await _productRepository.Update(product);
         }
-        public async Task DeleteCategory(int id)
+        public async Task DeleteProduct(int id)
         {
             var product = await _productRepository.GetById(id);
             if (product == null)

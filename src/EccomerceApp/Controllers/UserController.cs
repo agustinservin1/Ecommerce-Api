@@ -24,15 +24,11 @@ namespace Web.Controllers
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetAllUsers();
-            if (users.Any())
-            {
-                throw new NotFoundException("Users", "All");
-            }
             return Ok(users);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserRequest request)
+        [HttpPost ("PostUser")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             await _userService.CreateUser(request);
             return NoContent();
@@ -52,7 +48,7 @@ namespace Web.Controllers
             return Ok(listUsers);
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("UpdateUser/{id}")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
         {
             await _userService.UpdateUser(request);

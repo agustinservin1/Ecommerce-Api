@@ -1,5 +1,3 @@
-
-
 using Application.Interfaces;
 using Application.Services;
 using Domain.Exceptions;
@@ -7,6 +5,7 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// Registrar el middleware de manejo de excepciones globales
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

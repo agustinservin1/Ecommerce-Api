@@ -74,6 +74,10 @@ namespace Application.Services
         public async Task<IEnumerable<UserDto>>? GetAllUsers()
         {
             var listUser = await _repository.GetAll();
+            if (listUser == null || !listUser.Any()) 
+            {
+                throw new NotFoundException("Users", "All"); 
+            }
             return UserDto.CreateList(listUser);
         }
         public async Task<IEnumerable<UserDto>>? GetUsersByRol(string Role)

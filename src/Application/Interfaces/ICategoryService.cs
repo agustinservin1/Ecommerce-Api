@@ -14,7 +14,6 @@ namespace Application.Interfaces
         Task<CategoryDto> GetCategoryById(int id);
         Task<IEnumerable<CategoryDto>> GetAllCategories();
         Task UpdateCategory(int id, CreateCategoryRequest updateRequest);
-
-
+        Task DeleteCategory(int id);
     }
 }

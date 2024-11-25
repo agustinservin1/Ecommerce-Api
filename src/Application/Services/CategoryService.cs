@@ -58,7 +58,7 @@ namespace Application.Services
                 throw new NotFoundException($"Unable to create category {id}");
             }
 
-            updateRequest.Name = category.Name;
+            category.Name = updateRequest.Name;
             await _categoryRepository.Update(category);
         }
         public async Task DeleteCategory(int id)

@@ -9,7 +9,7 @@ namespace Domain.Interfaces
 {
     public interface IBaseRepository<T> where T : class
     {
-        public Task<T> GetById(int id);
+        public Task<T> GetById(object id);
         public Task<IEnumerable<T>> GetAll();
         public Task Create(T entity);
         public Task Update(T entity);

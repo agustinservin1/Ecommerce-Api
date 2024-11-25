@@ -29,6 +29,27 @@ namespace Application.Services
             var user = CreateUserRequest.ToEntity(userRequest);
             await _repository.Create(user);
         }
+        public async Task UpdateUser(UpdateUserRequest userRequest)
+        {
+            if (userRequest == null) throw new ArgumentNullException(nameof(userRequest));
+            if (!Enum.IsDefined(typeof(Role), userRequest.Role))
+            {
+                throw new NotFoundException("Invalid role");
+            }
+
+            var user = await _repository.GetById(userRequest.Id);
+            if (user == null)
+            {
+                throw new NotFoundException($"The user with id {userRequest.Id} does not exist");
+            }
+
+            user.FullName = userRequest.FullName;
+            user.Email = userRequest.Email;
+            user.Role = Enum.Parse<Role>(userRequest.Role.ToString());
+
+            await _repository.Update(user);
+        }
+
         public async Task DeleteUser(int id)
         {
 
@@ -54,6 +75,11 @@ namespace Application.Services
         {
             var listUser = await _repository.GetAll();
             return UserDto.CreateList(listUser);
+        }
+        public async Task<IEnumerable<UserDto>>? GetUsersByRol(string Role)
+        {
+            var list = await _repository.Search(u => u.Role.ToString() == Role);
+            return UserDto.CreateList(list);
         }
 
     }

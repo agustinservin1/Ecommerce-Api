@@ -22,6 +22,7 @@ namespace Application.Models.Request
         public string Image { get; set; } = string.Empty;
         [Required]
         public int IdCategory { get; set; }
+
         public static Product ToEntity(CreateProductRequest dto, Category category)
         {
             return new Product

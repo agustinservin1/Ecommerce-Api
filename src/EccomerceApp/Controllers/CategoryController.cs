@@ -52,7 +52,7 @@ namespace Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _categoryService.DeleteCategory(id)
+            await _categoryService.DeleteCategory(id);
             return NoContent();
         }
 

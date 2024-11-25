@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Request
 {
-    public class CreateUserRequestcs
+    public class CreateUserRequest
     {
         [Required]
         public string FullName { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ namespace Application.Models.Request
         [Required]
         public Role Role { get; set; }
 
-        public static User ToEntity(CreateUserRequestcs userDto)
+        public static User ToEntity(CreateUserRequest userDto)
         {
             User user = new User
             {

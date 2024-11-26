@@ -13,7 +13,7 @@ namespace Application.Interfaces
     {
         Task<OrderDto> CreateOrder(CreateOrderRequest orderRequest);
         Task<OrderDto> GetOrderById(int id);
-        Task<OrderDto> GetAllOrders();
+        Task<IEnumerable<OrderDto>> GetAllOrders();
         Task<OrderDto> DeleteOrder(int id);
     }
 }

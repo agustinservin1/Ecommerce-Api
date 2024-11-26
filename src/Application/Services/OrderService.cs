@@ -40,7 +40,7 @@ namespace Application.Services
             {
                 throw new NotFoundException();
             }
-            var order = CreateOrderRequest.ToEntity(orderRequest, user, orders);
+            var order = CreateOrderRequest.ToEntity(orderRequest, user, orders.ToList());
             await _orderRepository.Create(order);
             return OrderDto.CreateDto(order);
         }

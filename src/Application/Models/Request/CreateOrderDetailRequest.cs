@@ -27,6 +27,3 @@ namespace Application.Models.Request
         }
     }
 }
-
-}
-}

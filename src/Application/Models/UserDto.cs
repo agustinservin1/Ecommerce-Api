@@ -15,7 +15,7 @@ namespace Application.Models
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty ;
+        public string Role { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public static UserDto CreateDto(User user)
         {
@@ -29,16 +29,16 @@ namespace Application.Models
             }
             return dto;
         }
-        
+
         public static IEnumerable<UserDto> CreateList(IEnumerable<User> users)
-        { 
+        {
             List<UserDto> list = new List<UserDto>();
             foreach (User user in users)
             {
-               list.Add(CreateDto(user));
+                list.Add(CreateDto(user));
             }
             return list;
         }
 
-        }   
- }
+    }
+}

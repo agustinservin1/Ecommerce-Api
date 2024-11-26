@@ -12,7 +12,6 @@ namespace Application.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<ProductDto> Products { get; set; } = new List<ProductDto>();
 
         public static CategoryDto CreateDto(Category category)
         {
@@ -20,7 +19,6 @@ namespace Application.Dtos
             {
                 Id = category.Id,
                 Name = category.Name,
-                Products = category.Products.Select(ProductDto.CreateDto).ToList()
             };
         }
 

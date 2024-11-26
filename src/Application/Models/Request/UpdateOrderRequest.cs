@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Interfaces
+namespace Application.Models.Request
 {
-    internal interface IOrder
+    public class UpdateOrderRequest
     {
     }
 }

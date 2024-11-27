@@ -19,19 +19,22 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IUnitOfWork _unitOfWork;
         public OrderService(IOrderRepository orderRepository,
                             IUserRepository userRepository,
                             IProductRepository productRepository,
-                            IOrderDetailRepository orderDetailRepository)
+                            IOrderDetailRepository orderDetailRepository,
+                            IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
             _productRepository = productRepository;
             _orderDetailRepository = orderDetailRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<OrderDto> CreateOrder(CreateOrderRequest orderRequest)
         {
-       
+
             var user = await _userRepository.GetById(orderRequest.UserId);
             if (user == null)
             {
@@ -43,13 +46,68 @@ namespace Application.Services
                 User = user,
                 DateTime = DateTime.UtcNow,
                 StatusOrder = StatusOrder.Pending,
-                TotalPrice = 0, 
-                Details = new List<OrderDetail>() 
+                TotalPrice = 0,
+                Details = new List<OrderDetail>()
             };
 
             await _orderRepository.Create(order);
 
-        
+
+            return OrderDto.CreateDto(order);
+        }
+        public async Task<OrderDto> ConfirmOrder(int orderId)
+        {
+            var order = await _orderRepository.GetOrderById(orderId);
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with id {orderId} does not exist.");
+            }
+
+            if (order.StatusOrder != StatusOrder.Pending)
+            {
+                throw new InvalidOperationException("Only pending orders can be confirmed.");
+            }
+
+            if (order.Details == null || !order.Details.Any())
+            {
+                throw new InvalidOperationException("Cannot confirm an order without order details.");
+            }
+
+            order.StatusOrder = StatusOrder.Completed; //MODIFICAR NOMBRE ENUM
+
+            await _orderRepository.Update(order);
+
+            return OrderDto.CreateDto(order);
+        }
+        public async Task<OrderDto> CancelOrder(int orderId)
+        {
+            //orden, detalles y productos en una sola consulta
+            var order = await _orderRepository.GetOrderById(orderId);
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with id {orderId} does not exist.");
+            }
+
+            if (order.StatusOrder != StatusOrder.Completed && order.StatusOrder != StatusOrder.Pending)
+            {
+                throw new InvalidOperationException("Only completed or pending orders can be canceled.");
+            }
+
+            order.StatusOrder = StatusOrder.Canceled;
+            // Recargar stock 
+            foreach (var detail in order.Details)
+            {
+                var product = detail.Product;
+                product.Stock += detail.Quantity;
+            }
+
+          
+            await _unitOfWork.ExecuteTransactionAsync(async () =>
+            {
+                await _productRepository.UpdateRange(order.Details.Select(d => d.Product).ToList());
+                await _orderRepository.Update(order);
+            });
+
             return OrderDto.CreateDto(order);
         }
 

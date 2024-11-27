@@ -33,13 +33,13 @@ namespace Application.Services
 
             public async Task<IEnumerable<OrderDetailDto>> GetAllOrderDetails()
             {
-                var orderDetails = await _orderDetailRepository.GetAll();
+                var orderDetails = await _orderDetailRepository.GetAllOrderDetailsAsync();
                 return OrderDetailDto.CreateListDto(orderDetails);
             }
 
             public async Task<OrderDetailDto> GetOrderDetailById(int id)
             {
-                var orderDetail = await _orderDetailRepository.GetById(id);
+                var orderDetail = await _orderDetailRepository.GetByIdOrderDetails(id);
                 if (orderDetail == null)
                 {
                     throw new NotFoundException($"OrderDetail with id {id} does not exist");

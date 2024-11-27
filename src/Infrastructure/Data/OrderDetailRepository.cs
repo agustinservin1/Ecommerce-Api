@@ -16,28 +16,24 @@ namespace Infrastructure.Data
         {
             _context = context;
         }
-        // Método para crear un nuevo detalle de orden
-        public async Task<OrderDetail> CreateOrderDetailAsync(OrderDetail orderDetail)
-        {
-            await _context.OrderDetails.AddAsync(orderDetail); // Agregar el detalle
-            await _context.SaveChangesAsync(); // Guardar cambios
-            return orderDetail; 
-        }
 
-        // Método para crear múltiples detalles de orden
-        public async Task CreateOrderDetailsAsync(List<OrderDetail> orderDetails)
+        public async Task<OrderDetail> GetByIdOrderDetails(int id)
         {
-            await _context.OrderDetails.AddRangeAsync(orderDetails); // Agregar todos los detalles
-            await _context.SaveChangesAsync(); 
+            var orderDetail = await _context.OrderDetails
+                                            .Include(oc => oc.Order)
+                                            .Include(oc => oc.Product)
+                                            .FirstOrDefaultAsync(od => od.Id == id);
+
+            return orderDetail;
         }
 
 
-        // Método para obtener todos los detalles de la base de datos
         public async Task<List<OrderDetail>> GetAllOrderDetailsAsync()
         {
             return await _context.OrderDetails
-                .Include(od => od.Product) 
-                .ToListAsync(); 
+                .Include(o => o.Order)
+                .Include(od => od.Product)
+                .ToListAsync();
         }
     }
 }

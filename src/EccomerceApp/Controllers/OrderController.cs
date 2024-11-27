@@ -30,6 +30,23 @@ namespace Web.Controllers
             var order = await _orderService.CreateOrder(createOrder);
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
+        [HttpPut("CancelOrder/{id}")]
+        public ActionResult CancelOrder(int id)
+        {
+            
+            var order = _orderService.CancelOrder(id);
+            return Ok(order);
+
+        }
+        [HttpPut("Confirm/{id}")]
+        public ActionResult ConfirmOrder(int id)
+        {
+
+            var order = _orderService.ConfirmOrder(id);
+            return Ok(order);
+
+        }
+
         [HttpDelete("DeleteOrder{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

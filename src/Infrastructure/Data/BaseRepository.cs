@@ -50,6 +50,12 @@ namespace Infrastructure.Data
             await _context.SaveChangesAsync();
 
         }
+        public async Task UpdateRange(List<T> entities)
+        {
+            _context.Set<T>().UpdateRange(entities);  // Usamos el método UpdateRange para múltiples entidades
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> predicate)
         {
             IQueryable<T> query = _context.Set<T>().Where(predicate);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Application.Services
 {
@@ -40,50 +41,58 @@ namespace Application.Services
                 return OrderDetailDto.CreateDto(orderDetail);
             }
 
-            public async Task<OrderDetailDto> CreateOrderDetail(CreateOrderDetailRequest request, int orderId)
+        public async Task<OrderDetailDto> CreateOrderDetail(CreateOrderDetailRequest request, int orderId)
+        {
+            if (!await _orderRepository.Exists(orderId))
             {
-                var order = await _orderRepository.GetById(orderId);
-                if (order == null)
-                {
-                    throw new NotFoundException($"Order with id {orderId} does not exist");
-                }
-
-                var product = await _productRepository.GetById(request.ProductId);
-                if (product == null)
-                {
-                    throw new NotFoundException($"Product with id {request.ProductId} does not exist");
-                }
-
-                var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, order);
-                await _orderDetailRepository.Create(orderDetail);
-
-                return OrderDetailDto.CreateDto(orderDetail);
+                throw new NotFoundException($"Order with id {orderId} does not exist.");
             }
 
-            //public async Task<OrderDetailDto> UpdateOrderDetail(int id, UpdateOrderDetailRequest request)
-            //{
-            //    var orderDetail = await _orderDetailRepository.GetById(id);
-            //    if (orderDetail == null)
-            //    {
-            //        throw new NotFoundException($"OrderDetail with id {id} does not exist");
-            //    }
+            var product = await _productRepository.GetById(request.ProductId);
+            if (product == null)
+            {
+                throw new NotFoundException($"Product with id {request.ProductId} does not exist.");
+            }
 
-            //    var product = await _productRepository.GetById(request.ProductId);
-            //    if (product == null)
-            //    {
-            //        throw new NotFoundException($"Product with id {request.ProductId} does not exist");
-            //    }
+            var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, orderId); 
+            // Agrega detalle a  orden
+            var order = await _orderRepository.GetOrderById(orderId);
+            order.Details.Add(orderDetail); order.TotalPrice += orderDetail.Total;
+            // Actualiza el total await
+            await _orderRepository.Update(order);
+            await _orderDetailRepository.Create(orderDetail);
 
-            //    orderDetail.Product = product;
-            //    orderDetail.Quantity = request.Quantity;
-            //    orderDetail.Total = product.Price * request.Quantity;
 
-            //    await _orderDetailRepository.Update(orderDetail);
+            await _orderDetailRepository.Create(orderDetail);
 
-            //    return OrderDetailDto.CreateDto(orderDetail);
-            //}
+            return OrderDetailDto.CreateDto(orderDetail);
+        }
 
-            public async Task<bool> DeleteOrderDetail(int id)
+
+        //public async Task<OrderDetailDto> UpdateOrderDetail(int id, UpdateOrderDetailRequest request)
+        //{
+        //    var orderDetail = await _orderDetailRepository.GetById(id);
+        //    if (orderDetail == null)
+        //    {
+        //        throw new NotFoundException($"OrderDetail with id {id} does not exist");
+        //    }
+
+        //    var product = await _productRepository.GetById(request.ProductId);
+        //    if (product == null)
+        //    {
+        //        throw new NotFoundException($"Product with id {request.ProductId} does not exist");
+        //    }
+
+        //    orderDetail.Product = product;
+        //    orderDetail.Quantity = request.Quantity;
+        //    orderDetail.Total = product.Price * request.Quantity;
+
+        //    await _orderDetailRepository.Update(orderDetail);
+
+        //    return OrderDetailDto.CreateDto(orderDetail);
+        //}
+
+        public async Task<bool> DeleteOrderDetail(int id)
             {
                 var orderDetail = await _orderDetailRepository.GetById(id);
                 if (orderDetail == null)

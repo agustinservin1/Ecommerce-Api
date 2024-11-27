@@ -12,25 +12,25 @@ namespace Web.Controllers
         public OrderController(IOrderService orderService) {
             _orderService = orderService;
         }
-        [HttpGet("/GetById/{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var order = await _orderService.GetOrderById(id);
             return Ok(order);
         }
-        [HttpGet("/GetAllOrders")]
+        [HttpGet("GetAllOrders")]
         public async Task<IActionResult> GetAll()
         { 
             var orders = await _orderService.GetAllOrders();
             return Ok(orders);
         }
-        [HttpPost("/CreateOrder")]
+        [HttpPost("CreateOrder")]
         public async Task<IActionResult> CreateOrder([FromBody]CreateOrderRequest createOrder)
         {
             var order = await _orderService.CreateOrder(createOrder);
-            return NoContent();
+            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
-        [HttpDelete("/DeleteOrder{id}")]
+        [HttpDelete("DeleteOrder{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var deleteOrder = await _orderService.DeleteOrder(id);

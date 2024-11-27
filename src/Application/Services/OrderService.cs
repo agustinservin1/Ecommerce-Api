@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Services
 {
@@ -29,24 +31,33 @@ namespace Application.Services
         }
         public async Task<OrderDto> CreateOrder(CreateOrderRequest orderRequest)
         {
-
+       
             var user = await _userRepository.GetById(orderRequest.UserId);
             if (user == null)
             {
-                throw new NotFoundException($"The category with id {orderRequest.UserId} that not exist ");
+                throw new NotFoundException($"User with id {orderRequest.UserId} does not exist.");
             }
-            var orders = await _orderDetailRepository.GetAll();
-            if (orders == null)
+
+            // orden sin detalles
+            var order = new Order
             {
-                throw new NotFoundException();
-            }
-            var order = CreateOrderRequest.ToEntity(orderRequest, user, orders.ToList());
+                User = user,
+                DateTime = DateTime.UtcNow,
+                StatusOrder = StatusOrder.Pending,
+                TotalPrice = 0, 
+                Details = new List<OrderDetail>() //ver
+            };
+
             await _orderRepository.Create(order);
+
+        
             return OrderDto.CreateDto(order);
         }
+
+
         public async Task<OrderDto> GetOrderById(int id)
         {
-            var order = await _orderRepository.GetById(id);
+            var order = await _orderRepository.GetOrderById(id);
             if (order == null)
             {
                 throw new NotFoundException($"The order with id {id} that not exist ");
@@ -55,7 +66,7 @@ namespace Application.Services
         }
         public async Task<IEnumerable<OrderDto>> GetAllOrders()
         {
-            var orders = await _orderRepository.GetAll();
+            var orders = await _orderRepository.GetAllOrders();
             if (orders == null)
             {
                 throw new NotFoundException("Orders", "All");

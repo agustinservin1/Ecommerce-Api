@@ -23,7 +23,7 @@ namespace Web.Controllers
         [HttpGet("AllProducts")]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = _productService.GetAllProducts();
+            var products = await _productService.GetAllProducts();
             return Ok(products);
         }
         [HttpPost("CreateProduct")]

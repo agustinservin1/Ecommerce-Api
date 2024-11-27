@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,12 @@ namespace Application.Models
     public class OrderDto
     {
         public int Id { get; set; }
-        public UserDto? User { get; set; }
+        public UserDto User { get; set; } = new UserDto();
         public DateTime OrderDate { get; set; }
         public string Status { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
 
-        public List<OrderDetailDto> OrderDetails { get; set; } = new List<OrderDetailDto>();
+        public List<OrderDetailDto> OrderDetails { get; set; } 
 
         public static OrderDto CreateDto(Order order)
         {
@@ -25,14 +26,21 @@ namespace Application.Models
                 User = UserDto.CreateDto(order.User),
                 TotalAmount = order.TotalPrice,
                 OrderDate = order.DateTime,
-                Status = order.StatusOrder.ToString(),
-                OrderDetails = OrderDetailDto.CreateListDto(order.Details).ToList()
+                Status = StatusOrder.Pending.ToString(),
+                OrderDetails = OrderDetailDto.CreateListDto(order.Details).ToList() 
             };
         }
 
         public static IEnumerable<OrderDto> CreateListDto(IEnumerable<Order> orders)
         {
-            return orders.Select(CreateDto).ToList();
+            //List<OrderDto> list = new List<OrderDto>();
+            //foreach (Order order in orders)
+            //{
+            //    list.Add(CreateDto(order));
+            //}
+            //return list;
+            var ordenes = orders.Select(CreateDto).ToList();
+            return ordenes;
         }
     }
 }

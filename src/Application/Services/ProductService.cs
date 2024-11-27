@@ -37,7 +37,7 @@ namespace Application.Services
         }
         public async Task<ProductDto> GetProductById(int id)
         {
-            var product = await _productRepository.GetById(id);
+            var product = await _productRepository.GetByIdIncludeCategory(id);
             if (product == null)
             {
                 throw new NotFoundException(nameof(Product), id);
@@ -46,13 +46,10 @@ namespace Application.Services
         }
         public async Task<IEnumerable<ProductDto>> GetAllProducts()
         {
-            var products = await _productRepository.GetAll();
-            if (products == null)
-            {
-                throw new NotFoundException($"{nameof(GetAllProducts)}");
-            }
+            var products = await _productRepository.GetAllProductsWithCategories();
             return ProductDto.CreateList(products);
         }
+        
         public async Task UpdateProduct(int id, UpdateProductRequest updateRequest)
         {
             if (updateRequest == null)
@@ -82,8 +79,8 @@ namespace Application.Services
                 throw new NotFoundException(nameof(Product), id);
             }
             await _productRepository.Delete(product);
-
         }
+        
 
 
     }

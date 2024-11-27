@@ -12,25 +12,22 @@ namespace Application.Models.Request
 {
     public class CreateOrderRequest
     {
-        [Required]
-        public int UserId { get; set; }
-        [Required]
-        public string Status { get; set; }
-        [Required]
-        public decimal TotalAcount { get; set; }
-        [Required]
-        public List<CreateOrderDetailRequest> OrderDetails { get; set; } = new List<CreateOrderDetailRequest>();
-        public static Order ToEntity(CreateOrderRequest dto, User user, List<OrderDetail> orderDetails)
-        {
-            return new Order
-            {
-                User = user,
-                DateTime = DateTime.UtcNow,
-                StatusOrder = Enum.TryParse(dto.Status, true, out StatusOrder status) ? status : StatusOrder.Pending, //true insensible a mayusc - out = valor de salida, 
-                TotalPrice = orderDetails.Sum(detail => detail.Total),
-                Details = orderDetails
-            };
-        }
+            [Required]
+            public int UserId { get; set; }
 
+            // Ya no necesitamos esta lista en el cuerpo de la solicitud
+            // public List<CreateOrderDetailRequest> OrderDetails { get; set; } = new List<CreateOrderDetailRequest>();
+
+            public static Order ToEntity(CreateOrderRequest dto, User user)
+            {
+                return new Order
+                {
+                    User = user,
+                    DateTime = DateTime.UtcNow,
+                    StatusOrder = StatusOrder.Pending,
+                    TotalPrice = 0, // El precio total se actualizará después cuando se agreguen los detalles
+                    Details = new List<OrderDetail>() // Iniciar con una lista vacía de detalles
+                };
+            }
+        }
     }
-}

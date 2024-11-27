@@ -12,6 +12,8 @@ namespace Application.Models
 {
     public class UserDto
     {
+        public int Id { get; set; }
+
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -21,6 +23,7 @@ namespace Application.Models
         {
             UserDto dto = new UserDto();
             {
+                dto.Id = user.Id;
                 dto.FullName = user.FullName;
                 dto.Email = user.Email;
                 dto.Password = user.Password;

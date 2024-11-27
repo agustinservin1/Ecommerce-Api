@@ -9,5 +9,8 @@ namespace Domain.Interfaces
 {
     public interface IOrderDetailRepository : IBaseRepository<OrderDetail>
     {
+        Task<OrderDetail> CreateOrderDetailAsync(OrderDetail orderDetail);
+        Task CreateOrderDetailsAsync(List<OrderDetail> orderDetails);
+        Task<List<OrderDetail>> GetAllOrderDetailsAsync();
     }
 }

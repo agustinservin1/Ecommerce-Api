@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Entities
@@ -12,7 +13,7 @@ namespace Domain.Entities
     {
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public User User { get; set; } = new User();
         public decimal TotalPrice { get; set; }
         public DateTime DateTime { get; set; } = DateTime.UtcNow;

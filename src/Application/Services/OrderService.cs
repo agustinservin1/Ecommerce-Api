@@ -38,14 +38,13 @@ namespace Application.Services
                 throw new NotFoundException($"User with id {orderRequest.UserId} does not exist.");
             }
 
-            // orden sin detalles
             var order = new Order
             {
                 User = user,
                 DateTime = DateTime.UtcNow,
                 StatusOrder = StatusOrder.Pending,
                 TotalPrice = 0, 
-                Details = new List<OrderDetail>() //ver
+                Details = new List<OrderDetail>() 
             };
 
             await _orderRepository.Create(order);

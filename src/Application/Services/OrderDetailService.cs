@@ -43,30 +43,30 @@ namespace Application.Services
 
         public async Task<OrderDetailDto> CreateOrderDetail(CreateOrderDetailRequest request, int orderId)
         {
+            
             if (!await _orderRepository.Exists(orderId))
             {
                 throw new NotFoundException($"Order with id {orderId} does not exist.");
             }
-
+            var order = await _orderRepository.GetOrderById(orderId);
             var product = await _productRepository.GetById(request.ProductId);
             if (product == null)
             {
                 throw new NotFoundException($"Product with id {request.ProductId} does not exist.");
             }
 
-            var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, orderId); 
-            // Agrega detalle a  orden
-            var order = await _orderRepository.GetOrderById(orderId);
-            order.Details.Add(orderDetail); order.TotalPrice += orderDetail.Total;
-            // Actualiza el total await
+            var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, order);
+
+            
+
+            await _orderDetailRepository.Create(orderDetail);
+            order.Details.Add(orderDetail);
+            order.TotalPrice += orderDetail.Total;
             await _orderRepository.Update(order);
-            await _orderDetailRepository.Create(orderDetail);
-
-
-            await _orderDetailRepository.Create(orderDetail);
 
             return OrderDetailDto.CreateDto(orderDetail);
         }
+
 
 
         //public async Task<OrderDetailDto> UpdateOrderDetail(int id, UpdateOrderDetailRequest request)

@@ -75,7 +75,7 @@ namespace Infrastructure.Data
                         .HasOne(p => p.Category)               // Un producto tiene una categoría
                         .WithMany(c => c.Products)              // Una categoría tiene muchos productos
                         .HasForeignKey(p => p.CategoryId)   // Una categoría tiene muchos productos
-                         .IsRequired(); // La categoría es obligatoria
+                        .IsRequired(); // La categoría es obligatoria
 
         }
 

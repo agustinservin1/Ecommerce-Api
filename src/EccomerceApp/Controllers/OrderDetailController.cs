@@ -26,18 +26,14 @@ namespace Web.Controllers
             var orders = await _orderDetailService.GetAllOrderDetails();
             return Ok(orders);
         }
-        [HttpPost("{id}/details")]
+        [HttpPost("details{id}")]
         public async Task<IActionResult> CreateOrderDetail([FromBody] CreateOrderDetailRequest createOrder, int id)
         {
-            try
-            {
+            
                 var orderDetail = await _orderDetailService.CreateOrderDetail(createOrder, id);
                 return CreatedAtAction(nameof(CreateOrderDetail), new { id = orderDetail.Id }, orderDetail);
-            }
-            catch (Exception ex) // Captura cualquier excepción
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
+            
+          
         }
 
         [HttpDelete("DeleteOrderDetail{id}")]

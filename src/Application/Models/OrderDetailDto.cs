@@ -14,7 +14,6 @@ namespace Application.Models
         public int Id { get; set; }
         public int OrderDtoId { get; set; } 
         public int ProductDtoId { get; set; } 
-        public ProductDto ProductDto { get; set; } 
         public int Quantity { get; set; }
         public decimal TotalDetail { get; set; }
 
@@ -25,7 +24,7 @@ namespace Application.Models
             {
                 Id = orderDetail.Id,
                 OrderDtoId = orderDetail.Order.Id,
-                ProductDtoId = orderDetail.Product.Id, 
+                ProductDtoId = orderDetail.Product.Id,
                 Quantity = orderDetail.Quantity,
                 TotalDetail = orderDetail.Total,
             };
@@ -33,21 +32,7 @@ namespace Application.Models
 
         public static IEnumerable<OrderDetailDto> CreateListDto(IEnumerable<OrderDetail> orderDetails)
         {
-            //List<OrderDetailDto> list = new List<OrderDetailDto>();
-            //foreach (OrderDetail order in orderDetails)
-            //{
-            //    list.Add(CreateDto(order));
-            //}
-            //return list;
-
-            var detailDto = orderDetails.Select(CreateDto).ToList();
-           
-                foreach (var detail in detailDto)
-                {
-                    Console.WriteLine($"OrderDetailDto: Id={detail.Id}, OrderId={detail.OrderDtoId}, ProductId={detail.ProductDtoId}, Quantity={detail.Quantity}, Total={detail.TotalDetail}");
-                }
-
-          
+            var detailDto = orderDetails.Select(CreateDto).ToList();             
 
             return detailDto;
         }

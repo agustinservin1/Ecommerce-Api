@@ -23,7 +23,7 @@ namespace Infrastructure.Data
             var order = await _context.Orders
                                       .Include(o => o.User)
                                       .Include(o => o.Details)
-                                      .ThenInclude(od => od.Product)
+                                      .ThenInclude(o => o.Product)
                                       .FirstOrDefaultAsync(o => o.Id == orderId);
             return order;
         }
@@ -31,7 +31,9 @@ namespace Infrastructure.Data
         {
 
             var orders = await _context.Orders.Include(o => o.User)
-                                              .ToListAsync();
+                                               .Include(o => o.Details)
+                                               .ThenInclude(o => o.Product)
+                                               .ToListAsync();
             return orders;
         }
 

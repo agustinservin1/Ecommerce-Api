@@ -27,22 +27,22 @@ namespace Application.Models
                 TotalAmount = order.TotalPrice,
                 OrderDate = order.DateTime,
                 Status = StatusOrder.Pending.ToString(),
-                OrderDetails = OrderDetailDto.CreateListDto(order.Details).ToList() 
+                OrderDetails = order.Details.Select(OrderDetailDto.CreateDto).ToList(), 
             };
         }
 
         public static IEnumerable<OrderDto> CreateListDto(IEnumerable<Order> orders)
         {
-            //List<OrderDto> list = new List<OrderDto>();
-            //foreach (Order order in orders)
-            //{
-            //    list.Add(CreateDto(order));
-            //}
-            //return list;
-            var ordenes = orders.Select(CreateDto).ToList();
-            return ordenes;
+            List<OrderDto> list = new List<OrderDto>();
+            foreach (Order order in orders)
+            {
+                list.Add(CreateDto(order));
+            }
+            return list;
+
         }
     }
 }
+
 
 

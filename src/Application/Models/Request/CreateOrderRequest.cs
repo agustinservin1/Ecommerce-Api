@@ -14,10 +14,6 @@ namespace Application.Models.Request
     {
             [Required]
             public int UserId { get; set; }
-
-            // Ya no necesitamos esta lista en el cuerpo de la solicitud
-            // public List<CreateOrderDetailRequest> OrderDetails { get; set; } = new List<CreateOrderDetailRequest>();
-
             public static Order ToEntity(CreateOrderRequest dto, User user)
             {
                 return new Order
@@ -25,8 +21,8 @@ namespace Application.Models.Request
                     User = user,
                     DateTime = DateTime.UtcNow,
                     StatusOrder = StatusOrder.Pending,
-                    TotalPrice = 0, // El precio total se actualizará después cuando se agreguen los detalles
-                    Details = new List<OrderDetail>() // Iniciar con una lista vacía de detalles
+                    TotalPrice = 0, 
+                    Details = new List<OrderDetail>() 
                 };
             }
         }

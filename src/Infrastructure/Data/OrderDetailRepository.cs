@@ -21,14 +21,14 @@ namespace Infrastructure.Data
         {
             await _context.OrderDetails.AddAsync(orderDetail); // Agregar el detalle
             await _context.SaveChangesAsync(); // Guardar cambios
-            return orderDetail; // Retornar el detalle creado
+            return orderDetail; 
         }
 
         // Método para crear múltiples detalles de orden
         public async Task CreateOrderDetailsAsync(List<OrderDetail> orderDetails)
         {
             await _context.OrderDetails.AddRangeAsync(orderDetails); // Agregar todos los detalles
-            await _context.SaveChangesAsync(); // Guardar cambios
+            await _context.SaveChangesAsync(); 
         }
 
 
@@ -36,8 +36,8 @@ namespace Infrastructure.Data
         public async Task<List<OrderDetail>> GetAllOrderDetailsAsync()
         {
             return await _context.OrderDetails
-                .Include(od => od.Product) // Incluir los productos asociados
-                .ToListAsync(); // Obtener todos los detalles
+                .Include(od => od.Product) 
+                .ToListAsync(); 
         }
     }
 }

@@ -15,12 +15,12 @@ namespace Application.Models.Request
         [Required]
         public int Quantity { get; set; }
 
-        public static OrderDetail ToEntity(CreateOrderDetailRequest dto, Product product, int orderId)
+        public static OrderDetail ToEntity(CreateOrderDetailRequest dto, Product product, Order order)
         {
             return new OrderDetail
             {
-                OrderId = orderId,       
-                ProductId = product.Id,    
+                Order = order,       
+                Product = product,    
                 Quantity = dto.Quantity,
                 Total = product.Price * dto.Quantity 
             };

@@ -17,12 +17,18 @@ namespace Application.Services
             private readonly IOrderDetailRepository _orderDetailRepository;
             private readonly IProductRepository _productRepository;
             private readonly IOrderRepository _orderRepository;
+            private readonly IUnitOfWork _unitOfWork;
 
-            public OrderDetailService(IOrderDetailRepository orderDetailRepository, IProductRepository productRepository, IOrderRepository orderRepository)
+            public OrderDetailService(IOrderDetailRepository orderDetailRepository,
+                                      IProductRepository productRepository,
+                                      IOrderRepository orderRepository,
+                                      IUnitOfWork unitOfWork
+                )
             {
                 _orderDetailRepository = orderDetailRepository;
                 _productRepository = productRepository;
                 _orderRepository = orderRepository;
+                _unitOfWork = unitOfWork;
             }
 
             public async Task<IEnumerable<OrderDetailDto>> GetAllOrderDetails()
@@ -54,15 +60,27 @@ namespace Application.Services
             {
                 throw new NotFoundException($"Product with id {request.ProductId} does not exist.");
             }
-
-            var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, order);
-
             
+            if (product.Stock < request.Quantity)
+            {
+                throw new InvalidOperationException($"Insufficient stock for product with id {request.ProductId}. Requested: {request.Quantity}, Available: {product.Stock}");
+            }
 
-            await _orderDetailRepository.Create(orderDetail);
+           
+            product.Stock -= request.Quantity;
+
+            var orderDetail = CreateOrderDetailRequest.ToEntity(request, product, order);     
             order.Details.Add(orderDetail);
             order.TotalPrice += orderDetail.Total;
-            await _orderRepository.Update(order);
+            // Guardar cambios en una transacción
+            // Ejecutar las operaciones en una transacción
+            await _unitOfWork.ExecuteTransactionAsync(async () =>
+            {
+                await _orderDetailRepository.Create(orderDetail);
+                await _orderRepository.Update(order);
+                await _productRepository.Update(product);
+            });
+
 
             return OrderDetailDto.CreateDto(orderDetail);
         }

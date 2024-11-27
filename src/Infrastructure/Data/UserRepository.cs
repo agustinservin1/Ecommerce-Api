@@ -15,5 +15,14 @@ namespace Infrastructure.Data
         {
             _context = context;
         }
+        public User? Authenticate(string identifier, string password)
+        {
+            User? user = _context.Set<User>().FirstOrDefault(u =>
+                                             (u.Email == identifier
+                                             || u.FullName == identifier)
+                                             && u.Password == password);
+            return user;
+        }
+
     }
 }

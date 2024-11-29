@@ -14,6 +14,29 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
    
     public class PaymentService : IPaymentService
     {
-     
+        public PaymentService()
+        {
+            MercadoPagoConfig.AccessToken = Environment.GetEnvironmentVariable("MERCADO_PAGO_ACCESS_TOKEN");
+        }
+
+        public async Task<Preference> CreatePaymentAsync(PaymentDto payment)
+        {
+            var preferenceRequest = new PreferenceRequest
+            {
+                Items = new List<PreferenceItemRequest>
+            {
+                new PreferenceItemRequest
+                {
+                    Title = payment.Title,
+                    Quantity = payment.Quantity,
+                    CurrencyId = payment.CurrencyId,
+                    UnitPrice = payment.UnitPrice
+                }
+            }
+            };
+
+            var client = new PreferenceClient();
+            return await client.CreateAsync(preferenceRequest);
+        }
     }
 }

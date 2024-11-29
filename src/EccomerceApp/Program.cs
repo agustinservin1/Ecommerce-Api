@@ -1,9 +1,12 @@
 using Application.Interfaces;
 using Application.Services;
+using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.PaymentProvider.MercadoPagoProvider;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -58,6 +61,17 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#region CORS Y MERCADOPAGO SETTINGS
+
+// Configuración de CORS
+builder.Services.AddCors(options => {
+    options.AddPolicy("CorsPolicy", corsBuilder =>
+    {
+        corsBuilder.AllowAnyOrigin();
+        corsBuilder.AllowAnyMethod();
+        corsBuilder.AllowAnyHeader();
+    });
+});
 #endregion
 
 #region SERVICIOS
@@ -67,8 +81,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IAuthenticationServiceApi, AuthenticationServiceApi>();
-
-
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 #endregion
 
 
@@ -90,5 +103,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors("CorsPolicy");
 app.Run();
+#endregion

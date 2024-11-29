@@ -8,31 +8,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-  
-        [EnableCors("CorsPolicy")]
-        [ApiController]
-        [Route("/")]
-        public class MercadopagoController : ControllerBase
+
+    [ApiController]
+    [Route("/")]
+    public class MercadopagoController : ControllerBase
+    {
+        private readonly IPaymentService _paymentService;
+
+        public MercadopagoController(IPaymentService paymentService)
         {
-            private readonly IPaymentService _paymentService;
+            _paymentService = paymentService;
+        }
 
-            public MercadopagoController(IPaymentService paymentService)
-            {
-                _paymentService = paymentService;
-            }
+        [HttpPost]
+        [Route("redirect-mercadopago")]
+        public async Task<ProcessPaymentResponse> RedirectMercadopago(int idOrder)
+        {
 
-            [HttpPost]
-            [Route("redirect-mercadopago")]
-            public async Task<ProcessPaymentResponse> RedirectMercadopago([FromBody] List<OrderDto> ordersDto)
+            var preference = await _paymentService.CreatePaymentAsync(idOrder);
+            return new ProcessPaymentResponse
             {
-            {
-                var paymentDto = PaymentDto.FromOrderAndDetails(ordersDto);
-                var preference = await _paymentService.CreatePaymentAsync(paymentDto);
-                return new ProcessPaymentResponse
-                {
-                    UrlCheckout = preference.SandboxInitPoint }; }
-                }
+                UrlCheckout = preference.SandboxInitPoint
+            };
+
         }
     }
+}
 
-             

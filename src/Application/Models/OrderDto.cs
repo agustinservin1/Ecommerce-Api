@@ -16,7 +16,7 @@ namespace Application.Models
         public string Status { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
 
-        public List<OrderDetailDto> OrderDetails { get; set; } 
+        public List<OrderDetailDto>? OrderDetails { get; set; } 
 
         public static OrderDto CreateDto(Order order)
         {

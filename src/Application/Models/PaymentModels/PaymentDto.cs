@@ -15,26 +15,7 @@ namespace Application.Models.PaymentModels
         public string CurrencyId { get; set; } = "ARS"; 
         public List<PreferenceItemRequest> Items { get; set; } = new List<PreferenceItemRequest>(); 
 
-        public static PaymentDto FromOrderAndDetails(List<OrderDto> orders)
-        {
-            var paymentDto = new PaymentDto();
-
-            foreach (var order in orders)
-            {
-                foreach (var orderDetail in order.OrderDetails)
-                {
-                    paymentDto.Items.Add(new PreferenceItemRequest
-                    {
-                        Title = orderDetail.ProductName, 
-                        Quantity = orderDetail.Quantity,
-                        CurrencyId = "ARS",
-                        UnitPrice = orderDetail.TotalDetail/orderDetail.Quantity
-                    });
-                }
-            }
-
-            return paymentDto;
-        }
+        
     }
 
 }

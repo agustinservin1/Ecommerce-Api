@@ -61,18 +61,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-#region CORS Y MERCADOPAGO SETTINGS
 
-// Configuración de CORS
-builder.Services.AddCors(options => {
-    options.AddPolicy("CorsPolicy", corsBuilder =>
-    {
-        corsBuilder.AllowAnyOrigin();
-        corsBuilder.AllowAnyMethod();
-        corsBuilder.AllowAnyHeader();
-    });
-});
-#endregion
+
 
 #region SERVICIOS
 builder.Services.AddScoped<IUserService, UserService>();
@@ -103,6 +93,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors("CorsPolicy");
+//app.UseCors("CorsPolicy");
 app.Run();
 #endregion

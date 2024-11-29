@@ -1,4 +1,5 @@
-﻿using Application.Models.PaymentModels;
+﻿using Application.Models;
+using Application.Models.PaymentModels;
 using MercadoPago.Resource.Preference;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace Application.Interfaces
 {
     public interface IPaymentService
     {
-        Task<Preference> CreatePaymentAsync(PaymentDto payment);
+        Task<Preference> CreatePaymentAsync(int idOrder);
     }
 }

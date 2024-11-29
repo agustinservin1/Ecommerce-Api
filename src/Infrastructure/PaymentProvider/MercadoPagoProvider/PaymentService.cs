@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.PaymentProvider.MercadoPagoProvider
 {
-   
+
     public class PaymentService : IPaymentService
     {
         public PaymentService()
@@ -23,16 +23,7 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         {
             var preferenceRequest = new PreferenceRequest
             {
-                Items = new List<PreferenceItemRequest>
-            {
-                new PreferenceItemRequest
-                {
-                    Title = payment.Title,
-                    Quantity = payment.Quantity,
-                    CurrencyId = payment.CurrencyId,
-                    UnitPrice = payment.UnitPrice
-                }
-            }
+                Items = payment.Items
             };
 
             var client = new PreferenceClient();
@@ -40,3 +31,6 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         }
     }
 }
+
+
+

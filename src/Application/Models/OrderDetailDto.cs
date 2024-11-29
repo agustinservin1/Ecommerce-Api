@@ -16,7 +16,7 @@ namespace Application.Models
         public int ProductDtoId { get; set; } 
         public int Quantity { get; set; }
         public decimal TotalDetail { get; set; }
-
+        public string ProductName { get; set; } 
 
         public static OrderDetailDto CreateDto(OrderDetail orderDetail)
         {
@@ -27,6 +27,7 @@ namespace Application.Models
                 ProductDtoId = orderDetail.Product.Id,
                 Quantity = orderDetail.Quantity,
                 TotalDetail = orderDetail.Total,
+                ProductName = orderDetail.Product.Name,
             };
         }
 

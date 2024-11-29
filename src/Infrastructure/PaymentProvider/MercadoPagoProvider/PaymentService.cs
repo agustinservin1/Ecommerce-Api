@@ -33,7 +33,9 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
             }
             var paymentDto = FromOrderAndDetails(order); 
             var preferenceRequest = new PreferenceRequest
-            { Items = paymentDto.Items };
+            {
+                Items = paymentDto.Items
+            };
             var client = new PreferenceClient();
             return await client.CreateAsync(preferenceRequest);
             }

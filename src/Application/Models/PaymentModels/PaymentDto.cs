@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Entities.Domain.Entities;
 using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Payment;
 using System;

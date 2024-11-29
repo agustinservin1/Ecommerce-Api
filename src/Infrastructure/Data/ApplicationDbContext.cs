@@ -77,6 +77,10 @@ namespace Infrastructure.Data
                         .HasForeignKey(p => p.CategoryId)   // Una categoría tiene muchos productos
                         .IsRequired(); // La categoría es obligatoria
 
+            modelBuilder.Entity<Order>()
+                        .HasOne(o => o.Payment)
+                        .WithOne(p => p.Order)
+                        .HasForeignKey<Payment>(p => p.OrderId);
         }
 
 

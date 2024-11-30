@@ -31,10 +31,16 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
             {
                 throw new NotFoundException($"The order with id {idOrder} does not exist.");
             }
-            var paymentDto = FromOrderAndDetails(order); 
+            var paymentDto = FromOrderAndDetails(order);
             var preferenceRequest = new PreferenceRequest
             {
-                Items = paymentDto.Items
+                Items = paymentDto.Items,
+                Payer = new PreferencePayerRequest
+                {
+                    Name = order.User.FullName,
+                    Email = order.User.Email,
+
+                }
             };
             var client = new PreferenceClient();
             return await client.CreateAsync(preferenceRequest);

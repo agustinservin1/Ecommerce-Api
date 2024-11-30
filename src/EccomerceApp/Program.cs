@@ -39,9 +39,10 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "tpi-progIII" } //Tiene que coincidir con el id seteado arriba en la definición
+                    Id = "Ecommerce-Api" } //Tiene que coincidir con el id seteado arriba en la definición
                 }, new List<string>() }
     });
+    setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 #endregion
 
@@ -82,8 +83,12 @@ app.UseDeveloperExceptionPage();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();//ver
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Hace que Swagger esté disponible en la raíz });
+    });
 }
 // Registrar el middleware de manejo de excepciones globales
 app.UseMiddleware<ExceptionMiddleware>();

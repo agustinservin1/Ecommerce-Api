@@ -61,6 +61,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -72,6 +74,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IAuthenticationServiceApi, AuthenticationServiceApi>();
+builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 #endregion
 

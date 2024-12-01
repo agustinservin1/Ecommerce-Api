@@ -12,7 +12,7 @@ namespace Domain.Entities
     {
         public string PaymentId { get; set; }
         public int Provider { get; set; }
-        public PaymentStatus PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;   
         public decimal Amount { get; set; }
         public DateTime CreatedAt { get; set; }
         public int OrderId { get; set; }

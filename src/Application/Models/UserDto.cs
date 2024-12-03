@@ -14,7 +14,8 @@ namespace Application.Models
     {
         public int Id { get; set; }
 
-        public string FullName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
@@ -24,7 +25,8 @@ namespace Application.Models
             UserDto dto = new UserDto();
             {
                 dto.Id = user.Id;
-                dto.FullName = user.FullName;
+                dto.Name = user.Name;
+                dto.LastName = user.LastName;
                 dto.Email = user.Email;
                 dto.Password = user.Password;
                 dto.Role = user.Role.ToString();

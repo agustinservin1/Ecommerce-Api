@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
+using Application.Models;
 using Application.Models.Request;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -30,23 +32,18 @@ namespace Web.Controllers
             var order = await _orderService.CreateOrder(createOrder);
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
-        [HttpPut("CancelOrder/{id}")]
-        public ActionResult CancelOrder(int id)
+        [HttpPut("UpdateStatus/{id}")]
+        public async Task<ActionResult<OrderDto>> UpdateOrderStatus(int id, [FromBody] StatusOrder newStatus)
         {
-            
-            var order = _orderService.CancelOrder(id);
-            return Ok(order);
+            var result = await _orderService.UpdateOrderStatus(id, newStatus);
 
+            if (result == null)
+            {
+                return NotFound($"Order with id {id} does not exist.");
+            }
+
+            return Ok(result);
         }
-        [HttpPut("Confirm/{id}")]
-        public ActionResult ConfirmOrder(int id)
-        {
-
-            var order = _orderService.ConfirmOrder(id);
-            return Ok(order);
-
-        }
-
         [HttpDelete("DeleteOrder{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

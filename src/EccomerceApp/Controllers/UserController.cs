@@ -15,7 +15,7 @@ namespace Web.Controllers
             _userService = userService;
         }
 
-        [HttpGet("ById/{id}")]
+        [HttpGet("ById/")]
         public async Task<IActionResult> GetById(int id)
         {
             var user = await _userService.GetUserById(id);

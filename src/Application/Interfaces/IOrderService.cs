@@ -6,15 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Interfaces
 {
     public interface IOrderService
     {
         Task<OrderDto> CreateOrder(CreateOrderRequest orderRequest);
-        Task<OrderDto> ConfirmOrder(int orderId);
-        Task<OrderDto> CancelOrder(int orderId);
+        Task<OrderDto> UpdateOrderStatus(int orderId, StatusOrder newStatus);
         Task<OrderDto> GetOrderById(int id);
+        Task<OrderDto> GetOrderByPaymentId(int paymentProviderId);
         Task<IEnumerable<OrderDto>> GetAllOrders();
         Task<OrderDto> DeleteOrder(int id);
     }

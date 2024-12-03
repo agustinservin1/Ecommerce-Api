@@ -19,7 +19,7 @@ namespace Domain.Entities
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
         public StatusOrder StatusOrder { get; set; } = StatusOrder.Pending;
         public List<OrderDetail> Details { get; set; } = new List<OrderDetail>();
-        public Payment Payment { get; set; }
+        public Payments Payment { get; set; }
 
     }
 }

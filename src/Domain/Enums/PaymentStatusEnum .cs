@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum PaymentStatus
+    public enum PaymentStatusEnum
     {
+        Approved,
         Pending,
-        Completed,
-        Failed,
+        Authorized,
+        InProcess,
+        InMediation,
+        Rejected,
         Cancelled,
         Refunded,
-        Declined,
-        Expired,
-        InProcess,
-
+        ChargedBack,
+        Unknown 
     }
+
 }
+
+

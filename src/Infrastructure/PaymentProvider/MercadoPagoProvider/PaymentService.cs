@@ -3,62 +3,75 @@ using Application.Models;
 using Application.Models.PaymentModels;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.PaymentProvider.MercadoPagoProvider
 {
-
     public class PaymentService : IPaymentService
     {
         private readonly IOrderService _orderService;
-        public PaymentService(IOrderService orderService)
+        private readonly IPaymentRepository _paymentRepository;
+
+        public PaymentService(IOrderService orderService, IPaymentRepository paymentRepository)
         {
-            MercadoPagoConfig.AccessToken = Environment.GetEnvironmentVariable("MERCADO_PAGO_ACCESS_TOKEN");
+            var accessToken = Environment.GetEnvironmentVariable("MERCADO_PAGO_ACCESS_TOKEN");
+            MercadoPagoConfig.AccessToken = accessToken;
             _orderService = orderService;
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<Preference> CreatePaymentAsync(int idOrder)
         {
-            OrderDto order = await _orderService.GetOrderById(idOrder);
-            if (order == null)
+            
+                var order = await _orderService.GetOrderById(idOrder);
+                if (order == null)
+                {
+                    throw new NotFoundException($"The order with id {idOrder} does not exist.");
+                }
+                var preferenceRequest = GeneratePreferenceRequest(order);
+                var client = new PreferenceClient();
+                return await client.CreateAsync(preferenceRequest); ;
+        }   
+        private PreferenceRequest GeneratePreferenceRequest(OrderDto order)
+        {
+            return new PreferenceRequest
             {
-                throw new NotFoundException($"The order with id {idOrder} does not exist.");
-            }
-            var paymentDto = FromOrderAndDetails(order);
-            var preferenceRequest = new PreferenceRequest
-            {
-                Items = paymentDto.Items,
+                Items = order.OrderDetails.Select(detail => new PreferenceItemRequest
+                {
+                    Title = detail.ProductName,
+                    Quantity = detail.Quantity,
+                    CurrencyId = "ARS",
+                    UnitPrice = detail.TotalDetail / detail.Quantity
+                }).ToList(),
+
+                NotificationUrl = "https://30bc-2803-9800-98c1-7517-5902-cc20-fcb1-f701.ngrok-free.app/api/PaymentNotification/PaymentNotifications",
                 Payer = new PreferencePayerRequest
                 {
-                    Name = order.User.FullName,
-                    Email = order.User.Email,
-
-                }
+                    Name = order.User?.Name,
+                    Surname = order.User?.LastName,
+                    Email = order.User?.Email 
+                },
+                BackUrls = new PreferenceBackUrlsRequest
+                {
+                    Success = "http://httpbin.org/get?back_url=success",
+                    Failure = "http://httpbin.org/get?back_url=failure",
+                    Pending = "http://httpbin.org/get?back_url=pending"
+                },
+                AutoReturn = "approved",
+                Expires = true,
+                ExpirationDateFrom = DateTime.UtcNow,
+                ExpirationDateTo = DateTime.UtcNow.AddDays(10)
             };
-            var client = new PreferenceClient();
-            return await client.CreateAsync(preferenceRequest);
-            }
-        private PaymentDto FromOrderAndDetails(OrderDto order)
-        {
-            var paymentDto = new PaymentDto();
-            foreach (var orderDetail in order.OrderDetails) 
-            { paymentDto.Items.Add(new PreferenceItemRequest
-            { Title = orderDetail.ProductName,
-              Quantity = orderDetail.Quantity, CurrencyId = "ARS",
-              UnitPrice = orderDetail.TotalDetail / orderDetail.Quantity
-            });
-            } 
-            return paymentDto;
         }
+        public async Task<IEnumerable<Payments>> GetAllPayments()
+        {
+            return await _paymentRepository.GetAllPaymentsRepository();
+                
+        }
+
     }
 }
-
-
-

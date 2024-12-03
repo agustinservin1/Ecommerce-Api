@@ -18,6 +18,7 @@ namespace Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Payments> Payments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, bool isTestingEnviroment = false) : base(options)
         {
@@ -31,6 +32,8 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Category>().ToTable("Category");
             modelBuilder.Entity<Order>().ToTable("Order");
             modelBuilder.Entity<OrderDetail>().ToTable("OrderDetail");
+            modelBuilder.Entity<Payments>().ToTable("Payments");
+
 
             var UserType = new EnumToStringConverter<Role>();
             modelBuilder.Entity<User>()
@@ -51,6 +54,11 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Order>()
                 .Property(e => e.StatusOrder)
                 .HasConversion(OrderStatus);
+
+            var PaymentStatusEnum = new EnumToStringConverter<PaymentStatusEnum>();
+            modelBuilder.Entity<Payments>()
+                .Property(e => e.PaymentStatus)
+                .HasConversion(PaymentStatusEnum);
 
             modelBuilder.Entity<Order>()
                 .HasOne(s => s.User)
@@ -80,9 +88,15 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Order>()
                         .HasOne(o => o.Payment)
                         .WithOne(p => p.Order)
-                        .HasForeignKey<Payment>(p => p.OrderId);
-        }
+                        .HasForeignKey<Payments>(p => p.OrderId);
 
-
+            modelBuilder.Entity<Payments>() .HasKey(p => p.Id); 
+        
+        
+        }  
+    
     }
+
+
 }
+   

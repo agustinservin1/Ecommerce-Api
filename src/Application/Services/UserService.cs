@@ -43,7 +43,8 @@ namespace Application.Services
                 throw new NotFoundException($"The user with id {userRequest.Id} does not exist");
             }
 
-            user.FullName = userRequest.FullName;
+            user.Name = userRequest.Name;
+            user.LastName = userRequest.LastName;
             user.Email = userRequest.Email;
             user.Role = Enum.Parse<Role>(userRequest.Role.ToString());
 

@@ -1,21 +1,45 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 
 namespace Application.Models.PaymentModels
 {
     public class InfoPaymentNotification
     {
+        public InfoPaymentNotification()
+        {
+            Action = "payment.updated";
+            ApiVersion = "v1";
+            LiveMode = false;
+            Type = "payment";
+        }
+
+        [JsonProperty("action")]
         public string Action { get; set; }
-        public string ApiVersion { get; set; } = "v1";// Versión de la API REVISAR TIPO DE DATO.
-        public Data Data { get; set; } 
-        public string Id { get; set; } 
+
+        [JsonProperty("api_version")]
+        public string ApiVersion { get; set; }
+
+        [JsonProperty("data")]
+        public Data Data { get; set; }
+
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("live_mode")]
         public bool LiveMode { get; set; }
-        public string Type { get; set; } 
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("date_created")]
         public DateTime DateCreated { get; set; }
-        public string UserId { get; set; } = "1"; // REVISAR
+
+        [JsonProperty("user_id")]
+        public long UserId { get; set; }
     }
 
     public class Data
     {
-        public string Id { get; set; } // ID del recurso relacionado (por ejemplo, un pago) como string.
+        [JsonProperty("id")]
+        public string Id { get; set; }
     }
 }

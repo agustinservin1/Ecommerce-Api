@@ -16,7 +16,7 @@ namespace Infrastructure.Data
             _context = context;
         }
 
-        public async Task ExecuteTransactionAsync(Func<Task> action)
+        public async Task<bool> ExecuteTransactionAsync(Func<Task> action)
         {
             //Using asegura que la transacción se cierre correctamente, liberando los recursos.
 
@@ -25,12 +25,12 @@ namespace Infrastructure.Data
             {
                 await action(); //ejecuta función pasada por parametro
                 await transaction.CommitAsync(); //confirma los cambios de forma permanente
+                return true;
             }
             catch
             {
                 await transaction.RollbackAsync(); //revierte cambios si hubo algún error
-                throw;// relanza la excepción 
-
+                return false;
             }
         }
     }

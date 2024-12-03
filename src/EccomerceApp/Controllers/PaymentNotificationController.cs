@@ -1,37 +1,43 @@
 ﻿using Application.Interfaces;
 using Application.Models.PaymentModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace Web.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class PaymentNotificationController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class PaymentNotificationController : ControllerBase
+    private readonly IPaymentNotificationService _paymentNotificationService;
+    private readonly ILogger<PaymentNotificationController> _logger;
+
+    public PaymentNotificationController(IPaymentNotificationService paymentNotificationService, ILogger<PaymentNotificationController> logger)
     {
-        private readonly IPaymentNotificationService _paymentNotificationService;
+        _paymentNotificationService = paymentNotificationService;
+        _logger = logger;
+    }
 
-        public PaymentNotificationController(IPaymentNotificationService paymentNotificationService)
-        {
-            _paymentNotificationService = paymentNotificationService;
-        }
+    [HttpPost]
+    [Route("PaymentNotifications")]
 
-        [HttpPost]
-        [Route("PaymentNotifications")]
-        public IActionResult ReceivePaymentNotification([FromBody] InfoPaymentNotification notification)
+    public async Task<IActionResult> ReceivePaymentNotification([FromBody] InfoPaymentNotification notification)
+    {
+        if (Request.Headers.TryGetValue("X-Signature", out var xSignature) &&
+            Request.Headers.TryGetValue("X-Request-Id", out var xRequestId))
         {
-            if (Request.Headers.TryGetValue("X-Signature", out var xSignature) &&
-                Request.Headers.TryGetValue("X-Request-Id", out var xRequestId))
+            var dataId = notification.Data.Id;
+            if (_paymentNotificationService.ValidateSignature(xSignature, xRequestId, dataId))
             {
-                var dataId = notification.Data.Id;
-
-                if (_paymentNotificationService.ValidateSignature(xSignature, xRequestId, dataId))
+                var result = await _paymentNotificationService.ProcessNotification(notification);
+                if (result)
                 {
-                    _paymentNotificationService.ProcessNotification(notification);
                     return Ok();
                 }
+                else
+                {
+                    return BadRequest();
+                }
             }
-
-            return Unauthorized();
         }
+        return Unauthorized();
     }
 }

@@ -37,11 +37,15 @@ namespace Infrastructure.Data
             return orders;
         }
 
-        // Método para verificar si una orden existe por su ID
+        
         public async Task<bool> Exists(int orderId)
         {
             return await _context.Orders.AnyAsync(o => o.Id == orderId); 
         }
-        
-}
+        public async Task<Order> GetOrderByPaymentId(int paymentProviderId)
+        {
+            return await _context.Orders.Include(o => o.Payment).FirstOrDefaultAsync(o => o.Payment.PaymentProviderId == paymentProviderId);
+        }
+
+    }
 }

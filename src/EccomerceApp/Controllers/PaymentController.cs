@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
-
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("/")]
     public class MercadopagoController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -32,6 +31,15 @@ namespace Web.Controllers
             };
 
         }
+        [HttpGet]
+        [Route("/GetPayments")]
+        public async Task <IActionResult> GetAllPayments()
+        {
+            var payments = await _paymentService.GetAllPayments();
+            
+            return Ok(payments);
+        }
+
     }
 }
 

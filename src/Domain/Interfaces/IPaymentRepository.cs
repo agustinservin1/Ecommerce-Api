@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IPaymentRepository : IBaseRepository<Payment>
+    public interface IPaymentRepository : IBaseRepository<Payments>
     {
+        Task<IEnumerable<Payments>> GetAllPaymentsRepository();
     }
 }

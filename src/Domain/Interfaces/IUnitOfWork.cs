@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork
     {
-        Task ExecuteTransactionAsync(Func<Task> action);
+        Task<bool> ExecuteTransactionAsync(Func<Task> action);
     }
 }

@@ -10,6 +10,7 @@ namespace Application.Interfaces
     public interface IPaymentNotificationService
     {
         bool ValidateSignature(string xSignature, string xRequestId, string dataId);
-        Task ProcessNotification(InfoPaymentNotification notification);
+        Task<bool> ProcessNotification(InfoPaymentNotification notification);
+
     }
 }

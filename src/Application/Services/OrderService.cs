@@ -55,61 +55,33 @@ namespace Application.Services
 
             return OrderDto.CreateDto(order);
         }
-        public async Task<OrderDto> ConfirmOrder(int orderId)
+        public async Task<OrderDto> UpdateOrderStatus(int orderId, StatusOrder newStatus)
         {
             var order = await _orderRepository.GetOrderById(orderId);
             if (order == null)
             {
                 throw new NotFoundException($"Order with id {orderId} does not exist.");
             }
+            ValidateOrderStatusTransition(order, newStatus);
+            order.StatusOrder = newStatus;
 
-            if (order.StatusOrder != StatusOrder.Pending)
-            {
-                throw new InvalidOperationException("Only pending orders can be confirmed.");
-            }
-
-            if (order.Details == null || !order.Details.Any())
-            {
-                throw new InvalidOperationException("Cannot confirm an order without order details.");
-            }
-
-            order.StatusOrder = StatusOrder.Completed; //MODIFICAR NOMBRE ENUM
-
-            await _orderRepository.Update(order);
-
-            return OrderDto.CreateDto(order);
-        }
-        public async Task<OrderDto> CancelOrder(int orderId)
-        {
-            //orden, detalles y productos en una sola consulta
-            var order = await _orderRepository.GetOrderById(orderId);
-            if (order == null)
-            {
-                throw new NotFoundException($"Order with id {orderId} does not exist.");
-            }
-
-            if (order.StatusOrder != StatusOrder.Completed && order.StatusOrder != StatusOrder.Pending)
-            {
-                throw new InvalidOperationException("Only completed or pending orders can be canceled.");
-            }
-
-            order.StatusOrder = StatusOrder.Canceled;
-            // Recargar stock 
-            foreach (var detail in order.Details)
-            {
-                var product = detail.Product;
-                product.Stock += detail.Quantity;
-            }
-
-          
             await _unitOfWork.ExecuteTransactionAsync(async () =>
             {
-                await _productRepository.UpdateRange(order.Details.Select(d => d.Product).ToList());
+                if (newStatus == StatusOrder.Canceled)
+                {
+                    foreach (var detail in order.Details)
+                    {
+                        detail.Product.Stock += detail.Quantity;
+                    }
+                    await _productRepository.UpdateRange(order.Details.Select(d => d.Product).ToList());
+                }
+
                 await _orderRepository.Update(order);
             });
 
             return OrderDto.CreateDto(order);
         }
+
 
 
         public async Task<OrderDto> GetOrderById(int id)
@@ -130,6 +102,17 @@ namespace Application.Services
             }
             return OrderDto.CreateListDto(orders);
         }
+        public async Task<OrderDto> GetOrderByPaymentId(int paymentProviderId)
+        {
+            var order = await _orderRepository.GetOrderByPaymentId(paymentProviderId);
+            if (order == null)
+            {
+                throw new NotFoundException($"Order with payment ID {paymentProviderId} does not exist.");
+            }
+
+            return OrderDto.CreateDto(order);
+        }
+
         public async Task<OrderDto> DeleteOrder(int id)
         {
             var order = await _orderRepository.GetById(id);
@@ -139,6 +122,24 @@ namespace Application.Services
             }
             await _orderRepository.Delete(order);
             return OrderDto.CreateDto(order);
+        }
+
+        private void ValidateOrderStatusTransition(Order order, StatusOrder newStatus)
+        {
+            if (newStatus == StatusOrder.Completed && order.StatusOrder != StatusOrder.Pending)
+            {
+                throw new InvalidOperationException("Only pending orders can be confirmed.");
+            }
+
+            if (newStatus == StatusOrder.Canceled && (order.StatusOrder != StatusOrder.Pending && order.StatusOrder != StatusOrder.Completed))
+            {
+                throw new InvalidOperationException("Only completed or pending orders can be canceled.");
+            }
+
+            if (newStatus == StatusOrder.Completed && (order.Details == null || !order.Details.Any()))
+            {
+                throw new InvalidOperationException("Cannot confirm an order without order details.");
+            }
         }
 
 

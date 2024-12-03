@@ -1,12 +1,10 @@
 using Application.Interfaces;
 using Application.Services;
-using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.PaymentProvider.MercadoPagoProvider;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -61,7 +59,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentsRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -77,7 +75,11 @@ builder.Services.AddScoped<IAuthenticationServiceApi, AuthenticationServiceApi>(
 builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 #endregion
-
+#region LOGGING CONFIGURATION
+builder.Logging.ClearProviders(); 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+#endregion
 
 var app = builder.Build();
 app.UseDeveloperExceptionPage();

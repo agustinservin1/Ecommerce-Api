@@ -18,7 +18,7 @@ namespace Infrastructure.Data
         }
         public async Task<IEnumerable<Payments>> GetAllPaymentsRepository()
         {
-            return await _context.Payments.Include(p => p.Order).ToListAsync();
+            return await _context.Payments.ToListAsync();
         }
     }
 }

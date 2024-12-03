@@ -49,6 +49,7 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
                 }).ToList(),
 
                 NotificationUrl = "https://30bc-2803-9800-98c1-7517-5902-cc20-fcb1-f701.ngrok-free.app/api/PaymentNotification/PaymentNotifications",
+                ExternalReference = order.Id.ToString(),
                 Payer = new PreferencePayerRequest
                 {
                     Name = order.User?.Name,

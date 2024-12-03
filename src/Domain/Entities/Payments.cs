@@ -15,8 +15,8 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int Provider { get; set; }
         public PaymentStatusEnum PaymentStatus { get; set; } = PaymentStatusEnum.Pending;   
-        public decimal Amount { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public decimal? Amount { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public int PaymentProviderId { get; set; } // Identificador único del pago en Mercado Pago

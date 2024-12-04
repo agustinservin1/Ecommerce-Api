@@ -72,7 +72,7 @@ namespace Application.Services
             }
             return UserDto.CreateDto(user);
         }
-        public async Task<IEnumerable<UserDto>>? GetAllUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
             var listUser = await _repository.GetAll();
             if (listUser == null || !listUser.Any()) 
@@ -81,7 +81,7 @@ namespace Application.Services
             }
             return UserDto.CreateList(listUser);
         }
-        public async Task<IEnumerable<UserDto>>? GetUsersByRol(string Role)
+        public async Task<IEnumerable<UserDto>>GetUsersByRol(string Role)
         {
             var list = await _repository.Search(u => u.Role.ToString() == Role);
             return UserDto.CreateList(list);

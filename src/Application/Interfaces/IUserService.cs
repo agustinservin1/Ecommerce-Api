@@ -15,8 +15,8 @@ namespace Application.Interfaces
 
         public Task DeleteUser(int id);
         public Task<UserDto> GetUserById(int id);
-        public Task<IEnumerable<UserDto>>? GetAllUsers();
-        public Task<IEnumerable<UserDto>>? GetUsersByRol(string Role);
+        public Task<IEnumerable<UserDto>> GetAllUsers();
+        public Task<IEnumerable<UserDto>> GetUsersByRol(string Role);
 
     }
 }

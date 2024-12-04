@@ -32,7 +32,7 @@ namespace Web.Controllers
 
         }
         [HttpGet]
-        [Route("/GetPayments")]
+        [Route("GetPayments")]
         public async Task <IActionResult> GetAllPayments()
         {
             var payments = await _paymentService.GetAllPayments();
@@ -40,12 +40,18 @@ namespace Web.Controllers
             return Ok(payments);
         }
         [HttpGet]
-        [Route("/GetPaymentById(id)")]
+        [Route("GetPaymentById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var payment = await _paymentService.GetPaymentById(id);
             return Ok(payment);
         }
-    }
+        [HttpGet]
+        [Route("GetApprovedPayments")]
+        public async Task<IActionResult> GetApprovedPayments()
+        {
+            var approvedPayments = await _paymentService.GetApprovedPayments();
+            return Ok(approvedPayments);
+        }
 }
-
+}

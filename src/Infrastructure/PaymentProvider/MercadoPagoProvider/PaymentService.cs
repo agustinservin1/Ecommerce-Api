@@ -2,6 +2,7 @@
 using Application.Models;
 using Application.Models.PaymentModels;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using MercadoPago.Client.Preference;
@@ -9,6 +10,7 @@ using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace Infrastructure.PaymentProvider.MercadoPagoProvider
 {
@@ -77,10 +79,11 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         {
             return await _paymentRepository.GetPaymentById(id);
         }
-
-
-
-
-
-    }
+        public async Task<IEnumerable<Payments>> GetApprovedPayments()
+        { 
+           Expression<Func<Payments, bool>> predicate = payment => payment.PaymentStatus == PaymentStatusEnum.Approved; 
+           var approvedPayments = await _paymentRepository.Search(predicate);
+           return approvedPayments;
+        }
+}
 }

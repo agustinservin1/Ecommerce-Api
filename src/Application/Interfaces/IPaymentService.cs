@@ -15,5 +15,6 @@ namespace Application.Interfaces
         Task<Preference> CreatePaymentAsync(int idOrder);
         Task<IEnumerable<Payments>> GetAllPayments();
         Task<Payments> GetPaymentById(int id);
+        Task<IEnumerable<Payments>>GetApprovedPayments();
     }
 }

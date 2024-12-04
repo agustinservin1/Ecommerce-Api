@@ -105,6 +105,75 @@ namespace UnitTesting
             // Verify
             _mockService.Verify(service => service.CreateUser(createRequest), Times.Once);
         }
+        [Fact]
+        public async Task DeleteUser_NoContentResult()
+        {
+            // Arrange
+            var userId = 1;
+
+            _mockService.Setup(service => service.DeleteUser(userId)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.DeleteUser(userId);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+
+            // Verify
+            _mockService.Verify(service => service.DeleteUser(userId), Times.Once);
+        }
+
+        [Fact]
+        public async Task SearchByRole_OkResult()
+        {
+            // Arrange
+            var role = "Admin";
+            var userList = new List<UserDto>
+            {
+                new UserDto { Id = 1, Name = "Admin1", Role = role, Status = "Active" },
+                new UserDto { Id = 2, Name = "Admin2", Role = role, Status = "Active" }
+            };
+
+            _mockService.Setup(service => service.GetUsersByRol(role)).ReturnsAsync(userList);
+
+            // Act
+            var result = await _controller.SearchByRole(role);
+
+            // Assert
+            //verificamos que el resultado sea un 200
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            //verificamos que el contenido de la respuesta sea una lista de user dto
+            var returnValue = Assert.IsType<List<UserDto>>(okResult.Value);
+            Assert.Equal(2, returnValue.Count);
+
+            // Verify
+            _mockService.Verify(service => service.GetUsersByRol(role), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateUser_NoContentResult()
+        {
+            // Arrange
+            var updateRequest = new UpdateUserRequest
+            {
+                Id = 1,
+                Name = "Updated User",
+                LastName = "Updated LastName",
+                Email = "updated@example.com",
+                Role = Domain.Enums.Role.Customer,
+            };
+
+            _mockService.Setup(service => service.UpdateUser(updateRequest)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.UpdateUser(updateRequest);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+
+            // Verify
+            _mockService.Verify(service => service.UpdateUser(updateRequest), Times.Once);
+        }
 
     }
 }

@@ -39,7 +39,13 @@ namespace Web.Controllers
             
             return Ok(payments);
         }
-
+        [HttpGet]
+        [Route("/GetPaymentById(id)")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var payment = await _paymentService.GetPaymentById(id);
+            return Ok(payment);
+        }
     }
 }
 

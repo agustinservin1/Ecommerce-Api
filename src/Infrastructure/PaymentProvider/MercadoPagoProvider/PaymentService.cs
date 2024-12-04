@@ -7,6 +7,7 @@ using Domain.Interfaces;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.PaymentProvider.MercadoPagoProvider
@@ -71,8 +72,15 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         public async Task<IEnumerable<Payments>> GetAllPayments()
         {
             return await _paymentRepository.GetAllPaymentsRepository();
-
         }
+        public async Task<Payments> GetPaymentById(int id)
+        {
+            return await _paymentRepository.GetPaymentById(id);
+        }
+
+
+
+
 
     }
 }

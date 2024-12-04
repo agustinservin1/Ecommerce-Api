@@ -20,5 +20,9 @@ namespace Infrastructure.Data
         {
             return await _context.Payments.ToListAsync();
         }
+        public async Task<Payments> GetPaymentById(int paymentId)
+        {
+            return await _context.Payments.FindAsync(paymentId);
+        }
     }
 }

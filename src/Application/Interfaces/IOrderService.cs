@@ -15,7 +15,6 @@ namespace Application.Interfaces
         Task<OrderDto> CreateOrder(CreateOrderRequest orderRequest);
         Task<OrderDto> UpdateOrderStatus(int orderId, StatusOrder newStatus);
         Task<OrderDto> GetOrderById(int id);
-        Task<OrderDto> GetOrderByPaymentId(int paymentProviderId);
         Task<IEnumerable<OrderDto>> GetAllOrders();
         Task<OrderDto> DeleteOrder(int id);
     }

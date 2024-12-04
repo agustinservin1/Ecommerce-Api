@@ -14,7 +14,7 @@ public class PaymentNotificationService : IPaymentNotificationService
 {
     private readonly IOrderService _orderService;
     private readonly IPaymentRepository _paymentRepository;
-    private readonly IUnitOfWork _unitOfWork; // Agregar la unidad de trabajo
+    private readonly IUnitOfWork _unitOfWork;
     private readonly string _mercadoPagoSecretKey;
     private readonly string _mercadoPagoTokenKey;
 
@@ -62,27 +62,10 @@ public class PaymentNotificationService : IPaymentNotificationService
         {
             return false;
         }
-
         var mercadoPagoPayment = await GetPaymentDetailsAsync(paymentId);
-        if (mercadoPagoPayment == null)
-        {
-            throw new ArgumentNullException();
-
-        }
-
         var result = await ProcessPaymentAndOrder(mercadoPagoPayment);
+        await UpdateOrderStatusBasedOnPayment(mercadoPagoPayment);
         return result;
-    }
-    private async Task<bool> ProcessPaymentAndOrder(Payment mercadoPagoPayment)
-    {
-
-        var paymentEntity = MapToPaymentEntity(mercadoPagoPayment);
-        //var orderId = int.TryParse(mercadoPagoPayment.ExternalReference, out int orderIdStatus) ? orderIdStatus : throw new InvalidOperationException("Invalid ExternalReference format");
-
-        await _paymentRepository.Create(paymentEntity);
-        //await _orderService.UpdateOrderStatus(orderIdStatus, StatusOrder.Completed);
-
-        return true;
     }
     private async Task<Payment> GetPaymentDetailsAsync(long paymentId)
     {
@@ -90,6 +73,40 @@ public class PaymentNotificationService : IPaymentNotificationService
         Payment paymentmp = await client.GetAsync(paymentId);
         return paymentmp;
     }
+    private async Task<bool> ProcessPaymentAndOrder(Payment mercadoPagoPayment)
+    {
+
+        var paymentEntity = MapToPaymentEntity(mercadoPagoPayment);
+        await _paymentRepository.Create(paymentEntity);
+        return true;
+    }
+    private async Task<bool> UpdateOrderStatusBasedOnPayment(Payment mercadoPagoPayment)
+    {
+        if (!int.TryParse(mercadoPagoPayment.ExternalReference, out int orderId))
+        {
+            throw new InvalidOperationException("Invalid ExternalReference format");
+        }
+
+        StatusOrder newStatus;
+
+        switch (mercadoPagoPayment.Status.ToLower())
+        {
+            case PaymentStatus.Approved:
+                newStatus = StatusOrder.Completed;
+                break;
+            case PaymentStatus.Rejected:
+                newStatus = StatusOrder.Canceled;
+                break;
+            // Maneja otros estados según sea necesario
+            default:
+                newStatus = StatusOrder.Pending;
+                break;
+        }
+
+        await _orderService.UpdateOrderStatus(orderId, newStatus);
+        return true;
+    }
+
     private Payments MapToPaymentEntity(Payment mercadoPagoPayment)
     {
         if (mercadoPagoPayment == null)
@@ -97,12 +114,11 @@ public class PaymentNotificationService : IPaymentNotificationService
 
         Payments paymentGenerated = new Payments
         {
-            Provider = 1,
             PaymentStatus = MapToEnum(mercadoPagoPayment.Status),
             Amount = mercadoPagoPayment.TransactionAmount,
             CreatedAt = mercadoPagoPayment.DateCreated,
             OrderId = int.TryParse(mercadoPagoPayment.ExternalReference, out int orderId) ? orderId : throw new InvalidOperationException("Invalid ExternalReference format"),
-            PaymentProviderId = 1
+            PaymentProviderId = mercadoPagoPayment.Id,
         };
 
         return paymentGenerated;

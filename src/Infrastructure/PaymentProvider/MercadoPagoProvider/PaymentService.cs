@@ -26,21 +26,21 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
 
         public async Task<Preference> CreatePaymentAsync(int idOrder)
         {
-            
-                var order = await _orderService.GetOrderById(idOrder);
-                if (order == null)
-                {
-                    throw new NotFoundException($"The order with id {idOrder} does not exist.");
-                }
-                var preferenceRequest = GeneratePreferenceRequest(order);
-                var client = new PreferenceClient();
-                return await client.CreateAsync(preferenceRequest); ;
-        }   
+
+            var order = await _orderService.GetOrderById(idOrder);
+            if (order == null)
+            {
+                throw new NotFoundException($"The order with id {idOrder} does not exist.");
+            }
+            var preferenceRequest = GeneratePreferenceRequest(order);
+            var client = new PreferenceClient();
+            return await client.CreateAsync(preferenceRequest); ;
+        }
         private PreferenceRequest GeneratePreferenceRequest(OrderDto order)
         {
             return new PreferenceRequest
             {
-                Items = order.OrderDetails.Select(detail => new PreferenceItemRequest
+                Items = order?.OrderDetails?.Select(detail => new PreferenceItemRequest
                 {
                     Title = detail.ProductName,
                     Quantity = detail.Quantity,
@@ -48,13 +48,13 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
                     UnitPrice = detail.TotalDetail / detail.Quantity
                 }).ToList(),
 
-                NotificationUrl = "https://30bc-2803-9800-98c1-7517-5902-cc20-fcb1-f701.ngrok-free.app/api/PaymentNotification/PaymentNotifications",
-                ExternalReference = order.Id.ToString(),
+                NotificationUrl = "https://7c14-149-102-233-167.ngrok-free.app/api/PaymentNotification/PaymentNotifications",
+                ExternalReference = order?.Id.ToString(),
                 Payer = new PreferencePayerRequest
                 {
-                    Name = order.User?.Name,
-                    Surname = order.User?.LastName,
-                    Email = order.User?.Email 
+                    Name = order?.User?.Name,
+                    Surname = order?.User?.LastName,
+                    Email = order?.User?.Email
                 },
                 BackUrls = new PreferenceBackUrlsRequest
                 {
@@ -71,7 +71,7 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         public async Task<IEnumerable<Payments>> GetAllPayments()
         {
             return await _paymentRepository.GetAllPaymentsRepository();
-                
+
         }
 
     }

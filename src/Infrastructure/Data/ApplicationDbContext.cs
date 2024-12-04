@@ -63,7 +63,7 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Order>()
                 .HasOne(s => s.User)
                 .WithMany(u => u.OrdersList)
-                .OnDelete(DeleteBehavior.Restrict); // Evita eliminación en cascada de usuarios
+                .OnDelete(DeleteBehavior.Restrict); 
 
 
             modelBuilder.Entity<OrderDetail>()
@@ -76,14 +76,14 @@ namespace Infrastructure.Data
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(sd => sd.Product)
                 .WithMany(p => p.OrderDetailsList)
-                .OnDelete(DeleteBehavior.Restrict); // No eliminar productos al eliminar detalles
+                .OnDelete(DeleteBehavior.Restrict); 
 
 
             modelBuilder.Entity<Product>()
-                        .HasOne(p => p.Category)               // Un producto tiene una categoría
-                        .WithMany(c => c.Products)              // Una categoría tiene muchos productos
-                        .HasForeignKey(p => p.CategoryId)   // Una categoría tiene muchos productos
-                        .IsRequired(); // La categoría es obligatoria
+                        .HasOne(p => p.Category)              
+                        .WithMany(c => c.Products)              
+                        .HasForeignKey(p => p.CategoryId)   
+                        .IsRequired(); 
 
             modelBuilder.Entity<Order>()
                         .HasOne(o => o.Payment)

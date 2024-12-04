@@ -26,7 +26,7 @@ namespace Application.Models
                 User = UserDto.CreateDto(order.User),
                 TotalAmount = order.TotalPrice,
                 OrderDate = order.DateTime,
-                Status = StatusOrder.Pending.ToString(),
+                Status = order.StatusOrder.ToString(),
                 OrderDetails = order.Details.Select(OrderDetailDto.CreateDto).ToList(), 
             };
         }

@@ -42,10 +42,5 @@ namespace Infrastructure.Data
         {
             return await _context.Orders.AnyAsync(o => o.Id == orderId); 
         }
-        public async Task<Order> GetOrderByPaymentId(int paymentProviderId)
-        {
-            return await _context.Orders.Include(o => o.Payment).FirstOrDefaultAsync(o => o.Payment.PaymentProviderId == paymentProviderId);
-        }
-
     }
 }

@@ -12,9 +12,5 @@ namespace Domain.Interfaces
         Task<Order> GetOrderById(int orderId);
         Task<IEnumerable<Order>> GetAllOrders();
         Task<bool> Exists(int orderId);
-        Task<Order> GetOrderByPaymentId(int paymentProviderId);
-
-
-
     }
 }

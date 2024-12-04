@@ -62,6 +62,7 @@ namespace Application.Services
             {
                 throw new NotFoundException($"Order with id {orderId} does not exist.");
             }
+            Console.WriteLine($"Current Status: {order.StatusOrder}, New Status: {newStatus}");
             ValidateOrderStatusTransition(order, newStatus);
             order.StatusOrder = newStatus;
 
@@ -77,6 +78,7 @@ namespace Application.Services
                 }
 
                 await _orderRepository.Update(order);
+                Console.WriteLine($"Updated Status: {order.StatusOrder}");
             });
 
             return OrderDto.CreateDto(order);
@@ -102,17 +104,6 @@ namespace Application.Services
             }
             return OrderDto.CreateListDto(orders);
         }
-        public async Task<OrderDto> GetOrderByPaymentId(int paymentProviderId)
-        {
-            var order = await _orderRepository.GetOrderByPaymentId(paymentProviderId);
-            if (order == null)
-            {
-                throw new NotFoundException($"Order with payment ID {paymentProviderId} does not exist.");
-            }
-
-            return OrderDto.CreateDto(order);
-        }
-
         public async Task<OrderDto> DeleteOrder(int id)
         {
             var order = await _orderRepository.GetById(id);

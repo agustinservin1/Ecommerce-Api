@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-
     public interface IExportService<T> where T : class
     {
-        Task<byte[]> ExportDataToExcel(Expression<Func<T, bool>> filter);
+       Task<byte[]> ExportDataToExcel(Expression<Func<T, bool>> filter);
     }
 }
 

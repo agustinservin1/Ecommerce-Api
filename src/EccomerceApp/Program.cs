@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Services;
+using DocumentFormat.OpenXml.Office2021.MipLabelMetaData;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Infrastructure.Data;
@@ -74,6 +75,7 @@ builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 builder.Services.AddScoped<IAuthenticationServiceApi, AuthenticationServiceApi>();
 builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
 #endregion
 #region LOGGING CONFIGURATION
 builder.Logging.ClearProviders(); 

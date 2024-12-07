@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Application.Services;
-using DocumentFormat.OpenXml.Office2021.MipLabelMetaData;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Infrastructure.Data;
@@ -61,7 +60,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentsRepository>();
-
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -90,21 +89,20 @@ app.UseDeveloperExceptionPage();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();//ver
+    //app.UseDeveloperExceptionPage();
     app.UseSwagger();
+    
     app.UseSwaggerUI(c => {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // Hace que Swagger esté disponible en la raíz });
+        c.RoutePrefix = string.Empty; // Hace que Swagger esté disponible en la raíz 
     });
 }
+
 // Registrar el middleware de manejo de excepciones globales
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-//app.UseCors("CorsPolicy");
 app.Run();
 #endregion

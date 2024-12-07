@@ -11,7 +11,7 @@ namespace UnitTesting
 {
     public class UserServiceTesting
     {
-        private readonly IUserService _service;
+        private readonly UserService _service;
         private readonly Mock<IUserRepository> _mockRepository;
 
         public UserServiceTesting()

@@ -64,8 +64,8 @@ namespace UnitTesting
             // Arrange
             var userList = new List<UserDto>
             {
-                new UserDto { Id = 1, Name = "John", LastName = "Doe", Email = "john@example.com", Password = "password123", Role = "Customer", Status = "Active" },
-                new UserDto { Id = 2, Name = "Jane", LastName = "Doe", Email = "jane@example.com", Password = "password123", Role = "Customer", Status = "Active" }
+                new() { Id = 1, Name = "John", LastName = "Doe", Email = "john@example.com", Password = "password123", Role = "Customer", Status = "Active" },
+                new() { Id = 2, Name = "Jane", LastName = "Doe", Email = "jane@example.com", Password = "password123", Role = "Customer", Status = "Active" }
             };
             _mockService.Setup(service => service.GetAllUsers()).ReturnsAsync(userList);
 
@@ -130,8 +130,8 @@ namespace UnitTesting
             var role = "Admin";
             var userList = new List<UserDto>
             {
-                new UserDto { Id = 1, Name = "Admin1", Role = role, Status = "Active" },
-                new UserDto { Id = 2, Name = "Admin2", Role = role, Status = "Active" }
+                new () { Id = 1, Name = "Admin1", Role = role, Status = "Active" },
+                new () { Id = 2, Name = "Admin2", Role = role, Status = "Active" }
             };
 
             _mockService.Setup(service => service.GetUsersByRol(role)).ReturnsAsync(userList);

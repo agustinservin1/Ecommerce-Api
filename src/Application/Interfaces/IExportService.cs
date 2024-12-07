@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Models.Export;
 
 namespace Application.Interfaces
 {
     public interface IExportService<T> where T : class
     {
-       Task<byte[]> ExportDataToExcel(Expression<Func<T, bool>> filter);
+        Expression<Func<T, bool>> BuildFilterExpression(ExportPropierty propertyName,
+                                                        ExportOperation operation,
+                                                        string value, string? value2 = null);
+        Task<byte[]> ExportDataToExcel(Expression<Func<T, bool>> filterExpression);
     }
 }
 

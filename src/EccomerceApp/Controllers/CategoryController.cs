@@ -1,7 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Models.Request;
-using Domain.Entities;
-using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

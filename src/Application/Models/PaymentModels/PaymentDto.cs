@@ -1,11 +1,4 @@
-﻿using Domain.Entities;
-using MercadoPago.Client.Preference;
-using MercadoPago.Resource.Payment;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MercadoPago.Client.Preference;
 
 namespace Application.Models.PaymentModels
 {

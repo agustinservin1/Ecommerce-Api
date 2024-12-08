@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Models.Request;
+﻿using Application.Models.Request;
 using Application.Services;
 using Domain.Entities;
 using Domain.Enums;

@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Models.Export;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 
 
 namespace Web.Controllers
@@ -10,6 +12,7 @@ namespace Web.Controllers
     public class ExportGenericController<T> : ControllerBase where T : class
     {
         private readonly IExportService<T> _exportService;
+        
 
         public ExportGenericController(IExportService<T> exportService)
         {
@@ -21,7 +24,7 @@ namespace Web.Controllers
             [FromQuery] ExportPropierty propertyName,
             [FromQuery] ExportOperation operation,
             [FromQuery] string value,
-            [FromQuery] string value2 = null) 
+            [FromQuery] string? value2 = null) 
         {
            var filterExpression = _exportService.BuildFilterExpression(propertyName, operation, value, value2);
            var fileBytes = await _exportService.ExportDataToExcel(filterExpression);

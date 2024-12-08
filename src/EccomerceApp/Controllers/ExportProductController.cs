@@ -8,8 +8,10 @@ namespace Web.Controllers
     [ApiController]
     public class ExportProductController : ExportGenericController<Product>
     {
+
         public ExportProductController(IExportService<Product> exportService) : base(exportService)
         {
+            
         }
     }
 }

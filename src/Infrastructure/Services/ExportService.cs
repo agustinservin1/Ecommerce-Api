@@ -71,7 +71,7 @@ namespace Infrastructure.Services
         }
 
 
-        private static Expression BuildBetweenExpression(MemberExpression property, ConstantExpression constant, object value2)
+        private static Expression BuildBetweenExpression(MemberExpression property, ConstantExpression constant, object? value2)
         {
             if (value2 == null) throw new ArgumentException("The 'between' operation requires two values.");
             var constant2 = Expression.Constant(value2, value2.GetType());

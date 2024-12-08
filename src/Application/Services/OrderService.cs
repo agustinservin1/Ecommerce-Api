@@ -1,15 +1,10 @@
-﻿using Application.Models.Request;
+﻿using Application.Interfaces;
 using Application.Models;
-using Domain.Exceptions;
-using Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Interfaces;
+using Application.Models.Request;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Exceptions;
+using Domain.Interfaces;
 
 namespace Application.Services
 {

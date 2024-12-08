@@ -1,9 +1,5 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using Application.Models.PaymentModels;
-using Domain.Entities;
-using Infrastructure.PaymentProvider.MercadoPagoProvider;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

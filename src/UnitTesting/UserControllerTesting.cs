@@ -1,12 +1,9 @@
 using Application.Interfaces;
+using Application.Models;
+using Application.Models.Request;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Web.Controllers;
-using Application.Models;
-using Application.Models.Request;
-using Xunit;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace UnitTesting
 {

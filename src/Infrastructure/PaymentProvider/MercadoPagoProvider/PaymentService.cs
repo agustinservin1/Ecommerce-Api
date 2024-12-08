@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Models;
-using Application.Models.PaymentModels;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
@@ -8,8 +7,6 @@ using Domain.Interfaces;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
 using MercadoPago.Resource.Preference;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace Infrastructure.PaymentProvider.MercadoPagoProvider

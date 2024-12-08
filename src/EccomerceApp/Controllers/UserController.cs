@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Models.Request;
-using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

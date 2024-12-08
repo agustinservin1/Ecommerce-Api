@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Models.Request;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

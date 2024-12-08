@@ -1,11 +1,5 @@
-﻿using Application.Models.Request;
-using Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Application.Models;
+using Application.Models.Request;
 using Domain.Enums;
 
 namespace Application.Interfaces

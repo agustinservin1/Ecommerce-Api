@@ -1,14 +1,13 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using Application.Models.PaymentModels;
+using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using MercadoPago.Client.Payment;
-using Domain.Entities;
+using MercadoPago.Config;
 using MercadoPago.Resource.Payment;
-using Domain.Enums;
 using System.Security.Cryptography;
 using System.Text;
-using MercadoPago.Config;
 
 public class PaymentNotificationService : IPaymentNotificationService
 {

@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models.PaymentModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -38,6 +37,7 @@ public class PaymentNotificationController : ControllerBase
                 }
             }
         }
+        _logger.LogInformation("Log de prueba");
         return Unauthorized();
     }
 }

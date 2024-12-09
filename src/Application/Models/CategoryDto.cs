@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.Dtos
+namespace Application.Models
 {
     public class CategoryDto
     {

@@ -37,7 +37,7 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Ecommerce-Api" } //Tiene que coincidir con el id seteado arriba en la definición
+                    Id = "Web-Api" } //Tiene que coincidir con el id seteado arriba en la definición
                 }, new List<string>() }
     });
     setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -105,4 +105,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+public partial class Program { };
 #endregion

@@ -1,5 +1,5 @@
-﻿using Application.Dtos;
-using Application.Interfaces;
+﻿using Application.Interfaces;
+using Application.Models;
 using Application.Models.Request;
 using Domain.Entities;
 using Domain.Exceptions;

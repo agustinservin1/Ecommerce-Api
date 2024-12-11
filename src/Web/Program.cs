@@ -47,10 +47,35 @@ builder.Services.AddSwaggerGen(setupAction =>
 
 #region CONNECTION SQL SERVER
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Environment.IsEnvironment("Test")
+    ? builder.Configuration.GetConnectionString("TestConnection")
+    : builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+#region DB CONNECTION CHECK
+try
+{
+    using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        bool canConnect = dbContext.Database.CanConnect();  // Verifica si puede conectar a la base de datos
 
+        if (canConnect)
+        {
+            Console.WriteLine("Conexión a la base de datos exitosa.");
+        }
+        else
+        {
+            Console.WriteLine("No se pudo conectar a la base de datos.");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error al conectar con la base de datos: {ex.Message}");
+}
+#endregion
 #endregion 
 
 #region REPOSITORIOS

@@ -10,28 +10,29 @@ namespace Application.IntegrationTests
 {
     public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        // Crear el contenedor para SQL Server
+        //contenedor para sqlserver
         private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-            .WithPassword("YourStrongPassword!")
+            .WithPassword("Password123!")
+            .WithPortBinding(1435, 1433) 
             .Build();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureTestServices(services =>
             {
-                // Remover la configuración de DbContext existente
+                
                 var descriptor = services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
                 if (descriptor is not null)
                 {
                     services.Remove(descriptor);
                 }
 
-                // Agregar la nueva configuración de DbContext para el contenedor
+                // nueva config de DbContext para el contenedor
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options
                         .UseSqlServer(_dbContainer.GetConnectionString())
-                        .UseSnakeCaseNamingConvention();// Obtener la cadena de conexión del contenedor
+                        .UseSnakeCaseNamingConvention();
                 });
             });
         }

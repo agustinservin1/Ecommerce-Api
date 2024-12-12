@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data
@@ -18,6 +20,20 @@ namespace Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, bool isTestingEnviroment = false) : base(options)
         {
             _isTestingEnvironment = isTestingEnviroment;
+
+            var dbCreator = this.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+            if (dbCreator != null)
+            {
+                // Verificar si la base de datos no existe
+                if (!this.Database.EnsureCreated())
+                {
+                    // Solo ejecuta si no existe
+                    if (!dbCreator.CanConnect())
+                    {
+                        dbCreator.Create();
+                    }
+                }
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

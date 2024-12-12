@@ -8,3 +8,10 @@ This commit introduces the initial setup for integration testing in the Applicat
 
 3. ProductTest:
    - A placeholder for product-related integration tests inheriting from BaseIntegrationTest.
+
+
+
+
+
+
+

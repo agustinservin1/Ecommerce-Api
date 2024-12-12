@@ -11,18 +11,36 @@ using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
+//
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(44372);
+       
+    });
+}
+else
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ListenAnyIP(8082); // Puerto para el contenedor
+    });
+}
+
 
 // Add services to the container.
-
 #region Swagger
 builder.Services.AddControllers()
         .AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); // Convierte enums a strings
         });
+
 builder.Services.AddSwaggerGen(setupAction =>
 {
-    setupAction.AddSecurityDefinition("tpi-progIII", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+    setupAction.AddSecurityDefinition("Ecommerce-Api", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
     {
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
@@ -37,17 +55,17 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Web-Api" } //Tiene que coincidir con el id seteado arriba en la definición
+                    Id = "Ecommerce-Api" } //Tiene que coincidir con el id seteado arriba en la definición
                 }, new List<string>() }
     });
     setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 #endregion
-
-
 #region CONNECTION SQL SERVER
+var connectionString = builder.Environment.IsEnvironment("Test")
+    ? builder.Configuration.GetConnectionString("TestConnection")
+    : builder.Configuration.GetConnectionString("DefaultConnection");
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -62,9 +80,7 @@ builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentsRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
-
+#endregion
 #region SERVICIOS
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -76,29 +92,21 @@ builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationServi
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
 #endregion
-#region LOGGING CONFIGURATION
-builder.Logging.ClearProviders(); 
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
-#endregion
-
 var app = builder.Build();
+
 app.UseDeveloperExceptionPage();
 
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
     //app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    
-    app.UseSwaggerUI(c => {
+    app.UseSwaggerUI(c =>
+    {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // Hace que Swagger esté disponible en la raíz 
+        c.RoutePrefix = string.Empty; // Hace que Swagger sea accesible en "/"
     });
 }
 
-// Registrar el middleware de manejo de excepciones globales
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
@@ -106,4 +114,3 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 public partial class Program { };
-#endregion

@@ -11,7 +11,6 @@ using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
-//
 
 if (builder.Environment.IsDevelopment())
 {
@@ -61,6 +60,7 @@ builder.Services.AddSwaggerGen(setupAction =>
     setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 #endregion
+
 #region CONNECTION SQL SERVER
 var connectionString = builder.Environment.IsEnvironment("Test")
     ? builder.Configuration.GetConnectionString("TestConnection")
@@ -81,6 +81,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentsRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion
+
 #region SERVICIOS
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -92,6 +93,7 @@ builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationServi
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
 #endregion
+
 var app = builder.Build();
 
 app.UseDeveloperExceptionPage();

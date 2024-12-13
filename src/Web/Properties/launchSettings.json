@@ -30,6 +30,16 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5001"
     },
+    "IntegrationTests": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "IntegrationTests"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5002"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,

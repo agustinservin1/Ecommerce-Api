@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.IntegrationTests.ProductTests
+namespace IntegrationTests.ProductTests
 {
     public class QueryGetProductById
     {

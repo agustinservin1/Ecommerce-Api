@@ -22,7 +22,7 @@ namespace Application.Services
             var category = await _categoryRepository.GetById(productRequest.IdCategory);
             if (category == null)
             {
-                throw new NotFoundException($"The category with id {productRequest.IdCategory} that not exist ");
+                throw new NotFoundException("Category", productRequest.IdCategory);
             }
             var product = CreateProductRequest.ToEntity(productRequest, category);
             await _productRepository.Create(product);
@@ -33,7 +33,7 @@ namespace Application.Services
             var product = await _productRepository.GetByIdIncludeCategory(id);
             if (product == null)
             {
-                throw new NotFoundException(nameof(Product), id);
+                throw new NotFoundException("Product", id);
             }
             return ProductDto.CreateDto(product);
         }
@@ -52,13 +52,13 @@ namespace Application.Services
             var product = await _productRepository.GetById(id);
             if (product == null)
             {
-                throw new NotFoundException(nameof(Product), id);
+                throw new NotFoundException("Product", id);
             }
 
             var category = await _categoryRepository.GetById(updateRequest.IdCategory);
             if (category == null)
             {
-                throw new NotFoundException(nameof(Category), updateRequest.IdCategory);
+                throw new NotFoundException("Category", updateRequest.IdCategory);
             }
 
             UpdateProductRequest.UpdateEntity(product, updateRequest, category);
@@ -69,7 +69,7 @@ namespace Application.Services
             var product = await _productRepository.GetById(id);
             if (product == null)
             {
-                throw new NotFoundException(nameof(Product), id);
+                throw new NotFoundException("Product", id);
             }
             await _productRepository.Delete(product);
         }

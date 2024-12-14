@@ -3,6 +3,9 @@ using Infrastructure.Data;
 using IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Models.Request;
+using Application.Interfaces;
+using Domain.Exceptions;
 
 namespace IntegrationTests.ProductTests
 {
@@ -38,5 +41,32 @@ namespace IntegrationTests.ProductTests
             Assert.Equal(100, product.Stock);
         }
 
+        [Fact]
+        public async Task Should_Throw_NotFoundException_When_Category_Not_Exists()
+        {
+            // Arrange
+            var createProductRequest = new CreateProductRequest
+            {
+                Name = "Test Product",
+                Description = "This is a test product",
+                Stock = 100,
+                Price = 25,
+                IdCategory = 999,  //ID INEXISTENTE EN BD
+                Image = "image_url"
+            };
+
+            var productService = _scope.ServiceProvider.GetRequiredService<IProductService>();
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(async () =>
+            {
+                await productService.CreateProduct(createProductRequest);  //forzar fallo
+            });
+
+            //corrobora que la excepcion contenga el tipo correcto y el mensaje esperado
+            Assert.Equal("Entity Category (999) was not found.", exception.Message);
+
     }
 }
+}
+

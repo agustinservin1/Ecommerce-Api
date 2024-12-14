@@ -12,6 +12,8 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region  Ports
+
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(options =>
@@ -27,9 +29,8 @@ else
         options.ListenAnyIP(8082); // Puerto para el contenedor
     });
 }
+#endregion
 
-
-// Add services to the container.
 #region Swagger
 builder.Services.AddControllers()
         .AddJsonOptions(options =>
@@ -54,7 +55,7 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Ecommerce-Api" } //Tiene que coincidir con el id seteado arriba en la definición
+                    Id = "Ecommerce-Api" } 
                 }, new List<string>() }
     });
     setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -95,22 +96,19 @@ builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
 #endregion
 
 var app = builder.Build();
-
 app.UseDeveloperExceptionPage();
-
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
 {
-    //app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // Hace que Swagger sea accesible en "/"
+        c.RoutePrefix = string.Empty; 
     });
 }
 
-app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

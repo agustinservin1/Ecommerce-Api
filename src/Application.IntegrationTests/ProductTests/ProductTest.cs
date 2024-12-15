@@ -1,11 +1,9 @@
-﻿using IntegrationTests.ProductTests;
+﻿using Application.Interfaces;
+using Application.Models.Request;
+using Domain.Exceptions;
 using Infrastructure.Data;
-using IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Models.Request;
-using Application.Interfaces;
-using Domain.Exceptions;
 
 namespace IntegrationTests.ProductTests
 {

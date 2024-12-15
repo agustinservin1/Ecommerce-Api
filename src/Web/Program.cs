@@ -8,6 +8,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using Web.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,6 +96,16 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
 #endregion
 
+#region LOGGING
+// Agregar logging
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.AddDebug();
+});
+#endregion
+
 var app = builder.Build();
 app.UseDeveloperExceptionPage();
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test")
@@ -107,7 +118,7 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Test"
     });
 }
 
-
+app.UseMiddleware<PerformanceMiddleware>(); 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();

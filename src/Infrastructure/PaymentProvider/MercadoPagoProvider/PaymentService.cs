@@ -27,11 +27,7 @@ namespace Infrastructure.PaymentProvider.MercadoPagoProvider
         public async Task<Preference> CreatePaymentAsync(int idOrder)
         {
 
-            var order = await _orderService.GetOrderById(idOrder);
-            if (order == null)
-            {
-                throw new NotFoundException($"The order with id {idOrder} does not exist.");
-            }
+            var order = await _orderService.GetOrderById(idOrder) ?? throw new NotFoundException($"The order with id {idOrder} does not exist.");
             var preferenceRequest = GeneratePreferenceRequest(order);
             var client = new PreferenceClient();
             return await client.CreateAsync(preferenceRequest); ;

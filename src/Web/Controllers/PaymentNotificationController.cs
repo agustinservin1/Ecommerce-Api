@@ -2,42 +2,31 @@
 using Application.Models.PaymentModels;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
-[ApiController]
-public class PaymentNotificationController : ControllerBase
+namespace Web.Controllers
 {
-    private readonly IPaymentNotificationService _paymentNotificationService;
-    private readonly ILogger<PaymentNotificationController> _logger;
-
-    public PaymentNotificationController(IPaymentNotificationService paymentNotificationService, ILogger<PaymentNotificationController> logger)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PaymentNotificationController : ControllerBase
     {
-        _paymentNotificationService = paymentNotificationService;
-        _logger = logger;
-    }
+        private readonly IPaymentNotificationService _paymentNotificationService;
 
-    [HttpPost]
-    [Route("PaymentNotifications")]
-
-    public async Task<IActionResult> ReceivePaymentNotification([FromBody] InfoPaymentNotification notification)
-    {
-        if (Request.Headers.TryGetValue("X-Signature", out var xSignature) &&
-            Request.Headers.TryGetValue("X-Request-Id", out var xRequestId))
+        public PaymentNotificationController(IPaymentNotificationService paymentNotificationService)
         {
-            var dataId = notification.Data.Id;
-            if (_paymentNotificationService.ValidateSignature(xSignature, xRequestId, dataId))
-            {
-                var result = await _paymentNotificationService.ProcessNotification(notification);
-                if (result)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
+            _paymentNotificationService = paymentNotificationService;
         }
-        _logger.LogInformation("Log de prueba");
-        return Unauthorized();
+
+        [HttpPost]
+        [Route("PaymentNotifications")]
+        public async Task<IActionResult> ReceivePaymentNotification([FromBody] InfoPaymentNotification notification)
+        {
+            return Request.Headers.TryGetValue("X-Signature", out var xSignature) &&
+                   Request.Headers.TryGetValue("X-Request-Id", out var xRequestId) &&
+                   !string.IsNullOrWhiteSpace(notification.Data?.Id) &&
+                   _paymentNotificationService.ValidateSignature(xSignature.ToString(), xRequestId.ToString(), notification.Data!.Id)
+                ? await _paymentNotificationService.ProcessNotification(notification)
+                    ? Ok()
+                    : BadRequest()
+                : Unauthorized();
+        }
     }
 }

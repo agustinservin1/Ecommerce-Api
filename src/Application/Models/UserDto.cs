@@ -14,7 +14,7 @@ namespace Application.Models
         public string Status { get; set; } = string.Empty;
         public static UserDto CreateDto(User user)
         {
-            UserDto dto = new UserDto();
+            UserDto dto = new();
             {
                 dto.Id = user.Id;
                 dto.Name = user.Name;
@@ -29,7 +29,7 @@ namespace Application.Models
 
         public static IEnumerable<UserDto> CreateList(IEnumerable<User> users)
         {
-            List<UserDto> list = new List<UserDto>();
+            List<UserDto> list = new();
             foreach (User user in users)
             {
                 list.Add(CreateDto(user));

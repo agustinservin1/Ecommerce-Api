@@ -27,7 +27,7 @@ namespace Application.Models
 
         public static IEnumerable<OrderDto> CreateListDto(IEnumerable<Order> orders)
         {
-            List<OrderDto> list = new List<OrderDto>();
+            List<OrderDto> list = [];
             foreach (Order order in orders)
             {
                 list.Add(CreateDto(order));

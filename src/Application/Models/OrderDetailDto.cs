@@ -10,7 +10,7 @@ namespace Application.Models
         public int ProductDtoId { get; set; } 
         public int Quantity { get; set; }
         public decimal TotalDetail { get; set; }
-        public string ProductName { get; set; } 
+        public string ProductName { get; set; } = string.Empty;
 
         public static OrderDetailDto CreateDto(OrderDetail orderDetail)
         {

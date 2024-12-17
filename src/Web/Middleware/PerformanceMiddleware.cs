@@ -29,7 +29,7 @@ namespace Web.Middleware
                     "Request {Method} {Path} completed in {ElapsedMilliseconds}ms",
                     context.Request.Method,
                     context.Request.Path,//ruta api
-                    sw.ElapsedMilliseconds)//tiempo total transcurrido;
+                    sw.ElapsedMilliseconds);//tiempo total transcurrido;
             }
         }
     }

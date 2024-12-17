@@ -31,7 +31,7 @@ namespace Web.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Category data is null"); 
+                return BadRequest("Category data is null");
             }
             var createdCategory = await _categoryService.CreateCategory(request);
             return CreatedAtAction(nameof(GetById), new { id = createdCategory.Id }, createdCategory);

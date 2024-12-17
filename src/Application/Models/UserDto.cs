@@ -29,7 +29,7 @@ namespace Application.Models
 
         public static IEnumerable<UserDto> CreateList(IEnumerable<User> users)
         {
-            List<UserDto> list = new();
+            List<UserDto> list = [];
             foreach (User user in users)
             {
                 list.Add(CreateDto(user));

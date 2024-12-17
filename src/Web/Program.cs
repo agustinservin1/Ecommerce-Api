@@ -94,7 +94,19 @@ builder.Services.AddScoped<IAuthenticationServiceApi, AuthenticationServiceApi>(
 builder.Services.AddScoped<IPaymentNotificationService, PaymentNotificationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped(typeof(IExportService<>), typeof(ExportService<>));
+builder.Services.AddScoped<ICacheService, CacheService>();
 #endregion
+
+#region REDIS-SERVICIO
+
+var redisPassword = Environment.GetEnvironmentVariable("REDIS_PASSWORD");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = $"localhost:6379,password={redisPassword}";
+    options.InstanceName = "App-Cache";
+});
+#endregion
+
 
 #region LOGGING
 // Agregar logging

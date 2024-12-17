@@ -42,7 +42,7 @@ namespace Application.Services
                 DateTime = DateTime.UtcNow,
                 StatusOrder = StatusOrder.Pending,
                 TotalPrice = 0,
-                Details = new List<OrderDetail>()
+                Details = []
             };
 
             await _orderRepository.Create(order);

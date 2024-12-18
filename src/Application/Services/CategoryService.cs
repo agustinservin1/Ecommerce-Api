@@ -4,6 +4,7 @@ using Application.Models.Request;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -11,10 +12,12 @@ namespace Application.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICacheService _cacheService;
-        public CategoryService(ICategoryRepository categoryRepository, ICacheService cacheService)
+        private readonly ILogger<CategoryService> _logger;
+        public CategoryService(ICategoryRepository categoryRepository, ICacheService cacheService, ILogger<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
             _cacheService = cacheService;
+            _logger = logger;
         }
         public async Task<CategoryDto> CreateCategory(CreateCategoryRequest categoryRequest)
         {
@@ -33,18 +36,22 @@ namespace Application.Services
             var cachedCategory = await _cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
             {
+                _logger.LogInformation("Recuperando categoria {Id} desde Redis", id);
                 return cachedCategory;
             }
 
+            _logger.LogInformation("Recuperando categoría {Id} desde Base de Datos", id);
             var category = await _categoryRepository.GetById(id);
             if (category == null)
             {
+                _logger.LogWarning("Categoría {Id} no encontrada", id);
                 throw new NotFoundException(nameof(Category), id);
             }
 
             var categoryDto = CategoryDto.CreateDto(category);
 
             await _cacheService.SetAsync(cacheKey, categoryDto, TimeSpan.FromMinutes(15));
+            _logger.LogInformation("Categoría {Id} almacenada en caché", id);
 
             return categoryDto;
         }
